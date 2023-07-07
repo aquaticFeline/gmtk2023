@@ -1,0 +1,1 @@
+pyinstaller gmtk2023.py --name GMTK2023 --add-data ".\assets;."
