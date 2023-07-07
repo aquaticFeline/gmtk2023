@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from collections.abc import Callable
 from standardClasses import *
-import pygame
+import pygame, time
 import stateVars
 
 @dataclass
@@ -119,3 +119,39 @@ class PlayerWorldMap(VisualComponent):
         rect = self.image.get_rect()
         rect = rect.move(self.x, self.y)
         surface.blit(self.image, rect)
+
+@dataclass
+class GachaAnimation(VisualComponent):
+    completion: float = 0.0
+    reward: int = 0
+    animationStartTime: float = 0
+    animationPlaying: bool = False
+    
+    def __post_init__(self):
+        super().__post_init__()
+        self.leftImage = pygame.image.load("assets/whiteBox.png")
+        self.leftImage = pygame.transform.scale(self.leftImage, (50, 200))
+        self.rightImage = pygame.image.load("assets/whiteBox.png")
+        self.rightImage = pygame.transform.scale(self.rightImage, (50, 200))
+        self.center = 250
+        self.top = 50
+        self.animationScale = 150
+
+    def draw(self, surface):
+        if self.animationPlaying:
+            self.completion = (time.time() - self.animationStartTime)/3.0
+            if self.completion > 1:
+                self.completion = 1
+                self.animationPlaying = False
+
+        leftRect = self.leftImage.get_rect()
+        leftRect = leftRect.move(self.center-50-self.animationScale*self.completion, self.top)
+        surface.blit(self.leftImage, leftRect)
+
+        rightRect = self.rightImage.get_rect()
+        rightRect = rightRect.move(self.center+self.animationScale*self.completion, self.top)
+        surface.blit(self.rightImage, rightRect)
+
+        centerRect = pygame.rect.Rect(self.center-self.animationScale*self.completion, self.top+25, 2*self.animationScale*self.completion, 150)
+        pygame.draw.rect(surface, Color.white, centerRect)  
+
