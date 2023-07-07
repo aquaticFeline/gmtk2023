@@ -9,6 +9,7 @@ levelButtons = []
 class ViewScreen(Enum):
     Test = 0
     WorldMap = 1
+    GachaScreen = 2
 
 def myQuit():
     pygame.quit()

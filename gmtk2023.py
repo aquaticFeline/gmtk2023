@@ -74,7 +74,12 @@ def main():
     levelLine = Line(ViewScreen.WorldMap, 50, 50, 150, 100)
 
     playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 37.5, 0)
-    
+
+    worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
+    returnTestButton = Button(ViewScreen.GachaScreen, 0, 300, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
+
+    gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, 0.0)
+
     lastTime = time.time()
 
     viewSurfaces = {veiwScreen : pygame.Surface(screen_size) for veiwScreen in ViewScreen}
@@ -90,6 +95,8 @@ def main():
             lastTime = time.time()
             randomNumber = random.randint(0, 10)
             randomNumberText.text = f"{randomNumber}"
+            gachaAnimation.animationStartTime = time.time()
+            gachaAnimation.animationPlaying = True
             
         if pygame.key.get_pressed()[pygame.K_a] and lastTime - time.time() < -0.1:
             lastTime = time.time()
