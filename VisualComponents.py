@@ -129,9 +129,9 @@ class GachaAnimation(VisualComponent):
     
     def __post_init__(self):
         super().__post_init__()
-        self.leftImage = pygame.image.load("assets/whiteBox.png")
+        self.leftImage = pygame.image.load("assets/leftscroll.png")
         self.leftImage = pygame.transform.scale(self.leftImage, (50, 200))
-        self.rightImage = pygame.image.load("assets/whiteBox.png")
+        self.rightImage = pygame.image.load("assets/rightscroll.png")
         self.rightImage = pygame.transform.scale(self.rightImage, (50, 200))
         self.center = 250
         self.top = 50
@@ -152,6 +152,6 @@ class GachaAnimation(VisualComponent):
         rightRect = rightRect.move(self.center+self.animationScale*self.completion, self.top)
         surface.blit(self.rightImage, rightRect)
 
-        centerRect = pygame.rect.Rect(self.center-self.animationScale*self.completion, self.top+25, 2*self.animationScale*self.completion, 150)
-        pygame.draw.rect(surface, Color.white, centerRect)  
+        centerRect = pygame.rect.Rect(self.center-self.animationScale*self.completion, self.top+12.5, 2*self.animationScale*self.completion+2, 175)
+        pygame.draw.rect(surface, (193, 190, 169), centerRect)  
 
