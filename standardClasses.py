@@ -2,8 +2,9 @@ from enum import Enum
 import pygame, sys
 import stateVars
 
-buttons = []
 visualComponents = []
+buttons = []
+levelButtons = []
 
 class ViewScreen(Enum):
     Test = 0

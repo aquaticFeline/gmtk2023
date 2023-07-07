@@ -28,14 +28,19 @@ class CombatActor:
     def die(self):
         print(self, " died")
 
-def checkEvents():
+def checkEvents(playerWorldMap):
     for evt in pygame.event.get():
         if evt.type == pygame.QUIT:
             myQuit()
         if evt.type == pygame.MOUSEBUTTONDOWN:
             for button in buttons:
                 if(button.isValid()):
-                    button.checkAction()
+                    if button.checkAction():
+                        break
+            for levelButton in levelButtons:
+                if(levelButton.isValid()):
+                    if levelButton.checkAction(playerWorldMap):
+                        break
 
 def main():
     pygame.init()
@@ -53,15 +58,22 @@ def main():
     oponent = CombatActor(10, 50, 50)
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
+
+    randomNumberText = Text(ViewScreen.Test, 0, 0, Font.large, None, f"{randomNumber}")
+    playerHealthText = DynamicText(ViewScreen.Test, 0, 50, Font.large, lambda self: f"{player.health}")
+    oponentHealthText = DynamicText(ViewScreen.Test, 0, 100, Font.large, lambda self: f"{oponent.health}")
     
     playerAttackButton = Button(ViewScreen.Test, 100, 50, 150, 40, "Player Attck", pygame.font.Font(size=30), lambda: player.attack(oponent))
     opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Oponent Attack", pygame.font.Font(size=30), lambda: oponent.attack(player))
 
     worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
+    returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
-    randomNumberText = Text(ViewScreen.Test, 0, 0, Font.large, None, f"{randomNumber}")
-    playerHealthText = DynamicText(ViewScreen.Test, 0, 50, Font.large, lambda self: f"{player.health}")
-    oponentHealthText = DynamicText(ViewScreen.Test, 0, 100, Font.large, lambda self: f"{oponent.health}")
+    level0 = LevelButton(ViewScreen.WorldMap, 50, 50)
+    level1 = LevelButton(ViewScreen.WorldMap, 150, 100)
+    levelLine = Line(ViewScreen.WorldMap, 50, 50, 150, 100)
+
+    playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 37.5, 0)
     
     lastTime = time.time()
 
@@ -72,7 +84,7 @@ def main():
         for surface in viewSurfaces.values():
             surface.fill(Color.black)
 
-        checkEvents()
+        checkEvents(playerWorldMap)
 
         if pygame.key.get_pressed()[pygame.K_SPACE] and lastTime - time.time() < -0.1:
             lastTime = time.time()

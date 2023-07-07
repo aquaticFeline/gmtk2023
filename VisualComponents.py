@@ -67,3 +67,55 @@ class Button(VisualComponent):
         mouse = pygame.mouse.get_pos()
         if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
             self.action()
+            return True
+        return False
+
+@dataclass
+class LevelButton(VisualComponent):
+    x: float
+    y: float
+
+    def __post_init__(self):
+        super().__post_init__()
+        levelButtons.append(self)
+        self.radius = 15
+
+    def draw(self, surface):
+        mouse = pygame.mouse.get_pos()
+        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
+            pygame.draw.circle(surface, Color.white, (self.x, self.y), self.radius+5)
+            pygame.draw.circle(surface, Color.black, (self.x, self.y), self.radius+2.5)
+        pygame.draw.circle(surface, Color.white, (self.x, self.y), self.radius)
+
+    def checkAction(self, playerWorldMap):
+        mouse = pygame.mouse.get_pos()
+        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
+            playerWorldMap.x = self.x - 12.5
+            playerWorldMap.y = self.y - 50
+            return True
+        return False
+
+@dataclass
+class Line(VisualComponent):
+    startX: float
+    startY: float
+    endX: float
+    endY: float
+
+    def draw(self, surface):
+        pygame.draw.line(surface, Color.white, (self.startX, self.startY), (self.endX, self.endY))
+
+@dataclass
+class PlayerWorldMap(VisualComponent):
+    x: float
+    y: float
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.image = pygame.image.load("assets/stick man.png")
+        self.image = pygame.transform.scale(self.image, (25, 50))
+
+    def draw(self, surface):
+        rect = self.image.get_rect()
+        rect = rect.move(self.x, self.y)
+        surface.blit(self.image, rect)
