@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "GMTK2023 Python",
+            "type": "python",
+            "request": "launch",
+            "program": "gmtk2023.py",
+            "justMyCode": true
+        }
+    ]
+}
