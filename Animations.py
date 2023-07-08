@@ -74,6 +74,29 @@ class ShrinkAnimation(Animation):
                 self.actor.width = self.startX*(1-completion)
                 self.actor.height = self.startY*(1-completion)
 
+@dataclass
+class FadingText(VisualComponent, Animation):
+    x: float
+    y: float
+    text: str
+    speed: float
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.isAnimating = False
+        
+    def start(self):
+        self.isAnimating = True
+        
+    def update(self):
+        if self.isAnimating:
+            self.completion = (time.time() - self.startTime)*self.speed
+
+    def draw(self, surface):
+        pass
+
+
+
 
 
 
