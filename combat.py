@@ -78,7 +78,7 @@ class Attack:
             source.physicalAttack(target, self.strength)
 
     def genText(self, position, useButton, viewScreen, elements):
-        elements.append(HollowRect(viewScreen, position[0], position[1], 300, 150, 2.5))
+        elements.append(HollowRect(viewScreen, position[0], position[1], 320, 150, 2.5))
         elements.append(DynamicText(viewScreen, position[0], position[1], pygame.font.Font(size=50), lambda x: self.name))
         elements.append(DynamicText(viewScreen, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}"))
         if self.isMagic:
@@ -89,7 +89,7 @@ class Attack:
 
         if useButton:
             #if self.isMagic:
-            return DisableButton(viewScreen, position[0]+225, position[1], 75, 45, "Use", Font.large, None, None)
+            return DisableButton(viewScreen, position[0]+235, position[1]+10, 65, 35, "Use", pygame.font.Font(size=48), None, None)
             #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
 def nextTurn(player):

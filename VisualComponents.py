@@ -45,12 +45,12 @@ class Button(VisualComponent):
     def __post_init__(self):
         super().__post_init__()
         buttons.append(self)
-        self.stars = [pygame.image.load("assets\\activeStar.png"), pygame.image.load("assets\\activeStar.png")]
-        self.stars = [pygame.transform.scale(star, (25, 25)) for star in self.stars]
+        self.stars = [pygame.image.load("assets\\activeStar.png"), pygame.image.load("assets\\hoverStar.png")]
+        self.stars = [pygame.transform.scale(star, (15, 15)) for star in self.stars]
 
     def drawConfig(self):
         mouse = pygame.mouse.get_pos()
-        backColor = Color.gray if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else Color.white
+        backColor = (100, 200, 150) if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else (255, 255, 200)
         textColor = Color.black
         star = self.stars[0] if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else self.stars[1]
         return backColor, textColor, star
@@ -70,6 +70,21 @@ class Button(VisualComponent):
         starRect1 = starRect1.move(-starRect1.width/2.0, -starRect1.height/2.0)
         starRect1 = starRect1.move(self.x, self.y)
         surface.blit(star, starRect1)
+        starRect2 = star.get_rect()
+        starRect2 = starRect2.move(-starRect2.width/2.0, -starRect2.height/2.0)
+        starRect2 = starRect2.move(self.width, 0)
+        starRect2 = starRect2.move(self.x, self.y)
+        surface.blit(star, starRect2)
+        starRect3 = star.get_rect()
+        starRect3 = starRect3.move(-starRect3.width/2.0, -starRect3.height/2.0)
+        starRect3 = starRect3.move(0, self.height)
+        starRect3 = starRect3.move(self.x, self.y)
+        surface.blit(star, starRect3)
+        starRect4 = star.get_rect()
+        starRect4 = starRect4.move(-starRect4.width/2.0, -starRect4.height/2.0)
+        starRect4 = starRect4.move(self.width, self.height)
+        starRect4 = starRect4.move(self.x, self.y)
+        surface.blit(star, starRect4)
 
     def checkAction(self):
         mouse = pygame.mouse.get_pos()
@@ -85,12 +100,12 @@ class DisableButton(Button):
     def __post_init__(self):
         super().__post_init__()
         self.stars.append(pygame.image.load("assets\\disableStar.png"))
-        self.stars = [pygame.transform.scale(star, (25, 25)) for star in self.stars]
+        self.stars = [pygame.transform.scale(star, (15, 15)) for star in self.stars]
 
     def drawConfig(self):
         if self.isDisabled():
-            backColor = Color.darkGrey
-            textColor = Color.black
+            backColor = (50, 25, 25)
+            textColor = (150, 100, 100)
             star = self.stars[2]
             return backColor, textColor, star
         return super().drawConfig()
