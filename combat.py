@@ -52,10 +52,10 @@ class CombatActor:
         stateVars.player.money += 10
         spawnEnemy()
 
-    def genText(self, position):
+    def genText(self, position, viewScreen):
         self.texts = []
-        self.texts.append(DynamicText(ViewScreen.Battle, position[0], position[1], Font.medium, lambda x: f"Health: {self.health}/{self.maxHealth}"))
-        self.texts.append(DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"Mana: {self.mana}/{self.maxMana}"))
+        self.texts.append(DynamicText(viewScreen, position[0], position[1], Font.medium, lambda x: f"Health: {self.health}/{self.maxHealth}"))
+        self.texts.append(DynamicText(viewScreen, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"Mana: {self.mana}/{self.maxMana}"))
 
 @dataclass
 class Attack:
@@ -77,17 +77,19 @@ class Attack:
         else:
             source.physicalAttack(target, self.strength)
 
-    def genText(self, position, useButton):
-        HollowRect(ViewScreen.Battle, position[0], position[1], 300, 150, 2.5)
-        DynamicText(ViewScreen.Battle, position[0], position[1], pygame.font.Font(size=50), lambda x: self.name)
-        DynamicText(ViewScreen.Battle, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}")
+    def genText(self, position, useButton, viewScreen, elements):
+        elements.append(HollowRect(viewScreen, position[0], position[1], 300, 150, 2.5))
+        elements.append(DynamicText(viewScreen, position[0], position[1], pygame.font.Font(size=50), lambda x: self.name))
+        elements.append(DynamicText(viewScreen, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}"))
         if self.isMagic:
-            DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize()+Font.large.get_linesize(), Font.medium, lambda x: f"Mana cost: {self.manaCost}")
-        genMultilineText(self.description, ViewScreen.Battle, position[0], position[1]+(2 if self.isMagic else 1)*Font.medium.get_linesize()+Font.large.get_linesize(), Font.small)
-        
+            elements.append(DynamicText(viewScreen, position[0], position[1]+Font.medium.get_linesize()+Font.large.get_linesize(), Font.medium, lambda x: f"Mana cost: {self.manaCost}"))
+        multiText = genMultilineText(self.description, viewScreen, position[0], position[1]+(2 if self.isMagic else 1)*Font.medium.get_linesize()+Font.large.get_linesize(), Font.small)
+        for text in multiText:
+            elements.append(text)
+
         if useButton:
             #if self.isMagic:
-            return DisableButton(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None, None)
+            return DisableButton(viewScreen, position[0]+225, position[1], 75, 45, "Use", Font.large, None, None)
             #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
 def nextTurn(player):
@@ -97,9 +99,17 @@ def nextTurn(player):
 
 def spawnEnemy():
     stateVars.oponent = CombatActor(10, 10, 50, 50)
-    stateVars.oponent.genText((1250, 0))
+    stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
 
-
+def regenPlayerText():
+    for element in stateVars.player.elements:
+        visualComponents.remove(element)
+    for button in stateVars.player.buttons:
+        buttons.remove(button)
+    stateVars.player.buttons = []
+    stateVars.player.elements = []
+    stateVars.player.genText((0, 0), None, ViewScreen.GachaScreen, False)
+    stateVars.player.genText((0, 0), stateVars.oponent, ViewScreen.Battle, True)
 
 
 @dataclass
@@ -113,6 +123,8 @@ class Player(CombatActor):
         #super().__post_init__()
         self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 25 health", player=self))
         self.attacks.append(UsePotion(0.0, False, "Mana Potion", "Grants 25 mana", isMana=True, player=self))
+        self.elements = []
+        self.buttons = []
 
     def canBuy(self, cost):
         return cost <= self.money
@@ -131,28 +143,32 @@ class Player(CombatActor):
     def canManaPotion(self):
         return self.manaPotions > 0
 
-    def genText(self, position, opponent):
-        super().genText(position)
-        DynamicText(ViewScreen.Battle, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium, lambda x: f"Physical Strength: {self.physicalStrength}")
-        DynamicText(ViewScreen.Battle, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"Magical Strength: {self.magicalStrength}")
-        DynamicText(ViewScreen.Battle, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"Healing Potions: {self.healPotions}")
-        DynamicText(ViewScreen.Battle, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"Mana Potions: {self.manaPotions}")
+    def genText(self, position, opponent, viewScreen, isUseButton):
+        super().genText(position, viewScreen)
+        self.elements.append(DynamicText(viewScreen, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium, lambda x: f"Physical Strength: {self.physicalStrength}"))
+        self.elements.append(DynamicText(viewScreen, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"Magical Strength: {self.magicalStrength}"))
+        self.elements.append(DynamicText(viewScreen, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"Healing Potions: {self.healPotions}"))
+        self.elements.append(DynamicText(viewScreen, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"Mana Potions: {self.manaPotions}"))
 
-        @dataclass
-        class AttackButtonContainer:
-            attack: Attack
-            def _attack(iself):
-                iself.attack.attack(self, stateVars.oponent)
-                nextTurn(self)
-            def canAttack(iself):
-                global oponent
-                return not iself.attack.canAttack(self, oponent)
+        if isUseButton:
+            @dataclass
+            class AttackButtonContainer:
+                attack: Attack
+                def _attack(iself):
+                    iself.attack.attack(self, stateVars.oponent)
+                    nextTurn(self)
+                def canAttack(iself):
+                    global oponent
+                    return not iself.attack.canAttack(self, oponent)
 
         for i, attack in enumerate(self.attacks):
-            useButton = attack.genText((position[0], position[1]+6*(Font.medium.get_linesize())+i*150), True)
-            myAttack = AttackButtonContainer(attack)
-            useButton.action = myAttack._attack
-            useButton.isDisabled = myAttack.canAttack
+            useButton = attack.genText((position[0], position[1]+6*(Font.medium.get_linesize())+i*150), isUseButton, viewScreen, self.elements)
+            if isUseButton:
+                self.elements.append(useButton)
+                self.buttons.append(useButton)
+                myAttack = AttackButtonContainer(attack)
+                useButton.action = myAttack._attack
+                useButton.isDisabled = myAttack.canAttack
     
     def die(self):
         self.health = self.maxHealth

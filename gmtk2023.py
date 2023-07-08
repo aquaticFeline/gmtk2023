@@ -40,7 +40,7 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
-    player = Player(10, 10, 100, 100)
+    player = Player(10, 10, 100, 100, money = 100)
     stateVars.player = player
     spawnEnemy()
 
@@ -72,12 +72,12 @@ def main():
     playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-12.5, 300-50)
 
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
-    returnTestButton = Button(ViewScreen.GachaScreen, 0, 300, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
+    returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
 
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
 
-    player.genText((0, 0), oponent)
+    regenPlayerText()
     #oponent.genText((400, 0))
 
     genGacha(player)

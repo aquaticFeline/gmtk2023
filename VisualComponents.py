@@ -27,8 +27,10 @@ class Text(DynamicText):
         self.getText = lambda x: self.text
 
 def genMultilineText(text, viewScreen, x, y, font):
+    out = []
     for i, line in enumerate(text.split('\n')):
-        Text(viewScreen, x, y+font.get_linesize()*i, font, None, line)
+        out.append(Text(viewScreen, x, y+font.get_linesize()*i, font, None, line))
+    return out
 
 @dataclass
 class Button(VisualComponent):

@@ -1,8 +1,49 @@
 from dataclasses import dataclass
 from collections.abc import Callable
+from standardClasses import *
 from VisualComponents import *
 from combat import *
 import random
+
+# Gacha Rewards: 
+# Common: Money (5%) (5-10)
+# Uncommon: Health Potions & Mana Potions (10%, 10%) (3-7)
+# Rare: Character Stat Buffs (25%) (1-3)
+#  - Max Health
+#  - Max Mana
+#  - Physical Strength
+#  - Magical Strength
+#  - 
+# Epic: ???
+# Legendary: New Attacks (50%)
+# 
+
+swapButons = []
+swapping = False
+
+def swap(player, attack, position):
+    player.attacks[position] = attack
+    regenPlayerText()
+    clearButtons()
+
+def clearButtons():
+    global swapping, swapButons
+    swapping = False
+    for button in swapButons:
+        visualComponents.remove(button)
+        buttons.remove(button)
+    swapButons = []
+
+def _genSwapButton(player, attack, i):
+    position = (0, 0)
+    swapButons.append(Button(ViewScreen.GachaScreen, position[0]+200, position[1]+6*(Font.medium.get_linesize())+i*150, 100, 45, "Swap", Font.large, lambda: swap(player, attack, i)))
+
+def genSwapButtons(player, attack):
+    global swapping
+    swapping = True
+    for i in range(len(player.attacks)-2):
+        _genSwapButton(player, attack, i)
+    swapButons.append(Button(ViewScreen.GachaScreen, 1300, 55, 250, 45, "Discard", Font.large, lambda: clearButtons()))
 
 @dataclass
 class Reward():
@@ -11,11 +52,30 @@ class Reward():
 
 def genGacha(player):
     def getReward():
-        return genReward(random.choice(["health", "maxHealth", "mana", "maxMana", "physicalStrength", "magicalStrength", "healPotions", "manaPotions", "money"]), random.randint(1, 15), player)
+        rewardType = random.randint(0, 19)
+        if rewardType % 4 == 0:
+            return genCurrencyReward(random.choice(["maxHealth", "maxMana", "physicalStrength", "magicalStrength"]), random.randint(1, 3), player)
+        if rewardType == 1:
+            return genCurrencyReward("money", random.randint(5, 10), player)
+        if rewardType == 18 or rewardType == 19:
+            return genCurrencyReward("healPotions", random.randint(3, 7), player)
+        if rewardType == 15 or rewardType == 17:
+            return genCurrencyReward("manaPotions", random.randint(3, 7), player)
+        return genAttackReward(Attack(0, False, "None", "None"), player)
 
     gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)
 
-def genReward(currency, amount, player):
+def genAttackReward(attack, player):
+    def collect():
+        genSwapButtons(player, attack)
+
+    def draw(surface):
+        myText = Font.medium.render(f"New Attack", True, Color.white)
+        myTextRect = myText.get_rect()
+        surface.blit(myText, myTextRect)
+    return Reward(collect, draw)
+
+def genCurrencyReward(currency, amount, player):
     def collect():
         player.__setattr__(currency, amount+player.__getattribute__(currency))
     def draw(surface):
@@ -39,8 +99,8 @@ class GachaAnimation(VisualComponent):
         self.leftImage = pygame.transform.scale(self.leftImage, (50, 200))
         self.rightImage = pygame.image.load("assets/rightscroll.png")
         self.rightImage = pygame.transform.scale(self.rightImage, (50, 200))
-        self.center = 250
-        self.top = 50
+        self.center = 800
+        self.top = 150
         self.animationScale = 150
         self.createRollButton()
 
@@ -67,7 +127,7 @@ class GachaAnimation(VisualComponent):
         self.reward.collect()
 
     def createRollButton(self):
-        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Roll $5", Font.medium, self.roll, lambda: not self.player.canBuy(5))
+        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Roll $5", Font.medium, self.roll, lambda: not self.player.canBuy(5) or swapping)
 
     def createCollectButton(self):
         self.collectButton = Button(self.viewScreen, self.center - 50, self.top+125, 100, 50, "Collect", Font.medium, self.collectReward)
