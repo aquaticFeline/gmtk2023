@@ -68,12 +68,10 @@ def initFonts():
     Font.small = pygame.font.Font(size = 18)
     #pygame.font.Font(size = 28).
 
-iconImages = {}
-iconImageFiles = {}
 
 def initIcons():
-    global iconImages, iconImageFiles
-    iconImageFiles = {
+    #global iconImages, iconImageFiles
+    stateVars.iconImageFiles = {
         Icon.Health : "assets\\health.png", 
         Icon.Mana : "assets\\mana.png", 
         Icon.PhysicalStrength : "assets\\physicalstrength.png", 
@@ -82,5 +80,5 @@ def initIcons():
         Icon.ManaPotion : "assets\\manapotion.png", 
         Icon.Coin : "assets\\coin.png", 
     }
-    for icon in iconImageFiles:
-        iconImages[icon] = pygame.image.load(iconImageFiles[icon])
+    for icon in stateVars.iconImageFiles:
+        stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon])

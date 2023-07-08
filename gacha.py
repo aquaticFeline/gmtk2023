@@ -102,9 +102,22 @@ def genCurrencyReward(currency, name, icon, amount, player):
     def collect():
         player.__setattr__(currency, amount+player.__getattribute__(currency))
     def draw(surface):
-        myText = Font.medium.render(f"+{amount} {currency}", True, Color.white)
+        myText = Font.medium.render(f"+{amount} {name}", True, Color.white)
         myTextRect = myText.get_rect()
+        myTextRect = myTextRect.move((450-myTextRect.width)/2.0, 30)
         surface.blit(myText, myTextRect)
+        bigText = Font.large.render(f"+{amount}  ", True, Color.white)
+        bigTextRect = bigText.get_rect()
+        bigTextRect = bigTextRect.move((450-bigTextRect.width)/2.0, 120)
+        surface.blit(bigText, bigTextRect)
+
+        iconImg.x = bigTextRect.x+60
+        iconImg.y = bigTextRect.y
+        iconImg.draw(surface)
+
+    iconImg = createIcon(ViewScreen.Test, icon, 0, 0, Font.large)
+    visualComponents.remove(iconImg)
+
     return Reward(collect, draw)
 
 @dataclass
@@ -134,6 +147,7 @@ class GachaAnimation(VisualComponent):
         self.player.money -= 5
         buttons.remove(self.rollButton)
         visualComponents.remove(self.rollButton)
+        visualComponents.remove(self.rollCost)
         self.reward = self.getReward()
 
     def animationComplete(self):
@@ -150,7 +164,8 @@ class GachaAnimation(VisualComponent):
         self.reward.collect()
 
     def createRollButton(self):
-        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+325, 100, 50, "Roll $5", Font.medium, self.roll, lambda: not self.player.canBuy(5) or swapping)
+        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+325, 100, 50, "Roll 5    ", Font.medium, self.roll, lambda: not self.player.canBuy(5) or swapping)
+        self.rollCost = createIcon(self.viewScreen, Icon.Coin, self.center-50 + 6*12, self.top+325+15, Font.medium)
 
     def createCollectButton(self):
         self.collectButton = Button(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Collect", Font.medium, self.collectReward)

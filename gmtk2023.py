@@ -81,7 +81,7 @@ def main():
     stateVars.shadowfallAttack = shadowfallAttack
     stateVars.fireBallAttack = fireBallAttack
 
-    player = Player(10, 10, 100, 100, money = 100)
+    player = Player(10, 10, 100, 100, money = 100, _mana = 20)
     stateVars.player = player
     spawnEnemy()
 

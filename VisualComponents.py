@@ -226,4 +226,4 @@ class BattleBkgrdImage(VisualComponent):
         surface.blit(self.image, imageRect)
 
 def createIcon(viewScreen, icon, x, y, font):
-    Image(viewScreen, x, y, font.get_linesize(), font.get_linesize(), iconImageFiles[icon])
+    return Image(viewScreen, x, y, font.get_linesize(), font.get_linesize(), stateVars.iconImageFiles[icon])
