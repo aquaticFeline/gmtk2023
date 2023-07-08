@@ -1,6 +1,7 @@
 from enum import Enum
 import pygame, sys
 import stateVars
+from dataclasses import dataclass
 
 visualComponents = []
 buttons = []
@@ -37,6 +38,20 @@ class Levels(Enum):
     Cemetery = 0
     Woods = 1
     Meadows = 2
+
+@dataclass
+class VisualComponent:
+    viewScreen: ViewScreen
+
+    def __post_init__(self):
+        visualComponents.append(self)
+
+    def isValid(self):
+        global viewScreen
+        return self.viewScreen == stateVars.viewScreen
+
+    def draw(self, surface):
+        pass
 
 def initFonts():
     Font.large = pygame.font.Font(size = 60)
