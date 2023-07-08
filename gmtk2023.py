@@ -6,6 +6,7 @@ from VisualComponents import *
 from combat import *
 from standardClasses import *
 import stateVars
+from Animations import *
 
 player= None
 
@@ -40,12 +41,20 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
+    playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
+    enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
+    stateVars.enemyImage = enemyImage
+
     player = Player(10, 10, 100, 100, money = 100)
     stateVars.player = player
     spawnEnemy()
 
+    punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
+
+
+    player.attacks.insert(0, Attack(0.0, False, "None", "None"))
     player.attacks.insert(0, Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
-    player.attacks.insert(0, Attack(10.0, False, "Punch", "punch 'em \nin the face"))
+    player.attacks.insert(0, punchAttack)
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
 
@@ -77,6 +86,16 @@ def main():
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
 
+    def punchAttackAttack(x, y):
+        global inAnimation
+        punchAttackAnimation.start()
+        inAnimation = True
+    def doPunchAttack():
+        punchAttack._attack(player, stateVars.oponent)
+        nextTurn(player)
+    punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, doPunchAttack)
+    punchAttack.attack = punchAttackAttack
+
     regenPlayerText()
     #oponent.genText((400, 0))
 
@@ -93,6 +112,9 @@ def main():
 
         for visualComponent in visualComponents:
             visualComponent.draw(viewSurfaces[visualComponent.viewScreen])
+
+        for animation in animations:
+            animation.update()
 
         screen.blit(viewSurfaces[stateVars.viewScreen], screen_rect)
 
