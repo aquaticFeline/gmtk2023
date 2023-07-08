@@ -80,7 +80,7 @@ class Attack:
 
     def genText(self, position, useButton):
         HollowRect(ViewScreen.Battle, position[0], position[1], 300, 150, 2.5)
-        DynamicText(ViewScreen.Battle, position[0], position[1], Font.large, lambda x: self.name)
+        DynamicText(ViewScreen.Battle, position[0], position[1], pygame.font.Font(size=50), lambda x: self.name)
         DynamicText(ViewScreen.Battle, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}")
         if self.isMagic:
             DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize()+Font.large.get_linesize(), Font.medium, lambda x: f"Mana cost: {self.manaCost}")
@@ -101,8 +101,20 @@ def spawnEnemy():
     oponent = CombatActor(10, 10, 50, 50)
     oponent.genText((1250, 0))
 
+@dataclass
 class UsePotion(Attack):
-    pass
+    isMana: bool = False
+    def __post_init__(self):
+        super().__post_init__()
+        self.canAttack = lambda x, y: player.canManaPotion() if self.isMana else player.canHealPotion()
+    
+    def _attack(self, player, y):
+        if self.isMana:
+            player.mana += 25
+            player.manaPotions -= 1
+        else:
+            player.health += 50
+            player.healPotions -= 1
 
 
 @dataclass
@@ -111,6 +123,11 @@ class Player(CombatActor):
     money: float = 10
     healPotions: int = 0
     manaPotions: int = 0
+
+    def __post_init__(self):
+        #super().__post_init__()
+        self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 25 health"))
+        self.attacks.append(UsePotion(0.0, False, "Mana Potion", "Grants 25 mana", isMana=True))
 
     def canBuy(self, cost):
         return cost <= self.money
@@ -211,8 +228,8 @@ def main():
     player = Player(10, 10, 100, 100)
     spawnEnemy()
 
-    player.attacks.append(Attack(10.0, False, "Punch", "punch 'em \nin the face"))
-    player.attacks.append(Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
+    player.attacks.insert(0, Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
+    player.attacks.insert(0, Attack(10.0, False, "Punch", "punch 'em \nin the face"))
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
 
