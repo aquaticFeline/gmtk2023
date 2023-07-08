@@ -66,6 +66,11 @@ class Button(VisualComponent):
         ButtonTextRect = ButtonTextRect.move(self.x, self.y)
         surface.blit(ButtonText, ButtonTextRect)
 
+        starRect1 = star.get_rect()
+        starRect1 = starRect1.move(-starRect1.width/2.0, -starRect1.height/2.0)
+        starRect1 = starRect1.move(self.x, self.y)
+        surface.blit(star, starRect1)
+
     def checkAction(self):
         mouse = pygame.mouse.get_pos()
         if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
@@ -86,7 +91,7 @@ class DisableButton(Button):
         if self.isDisabled():
             backColor = Color.darkGrey
             textColor = Color.black
-            star = None
+            star = self.stars[2]
             return backColor, textColor, star
         return super().drawConfig()
 
