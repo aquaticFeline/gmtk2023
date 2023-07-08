@@ -28,6 +28,19 @@ class CombatActor:
     def die(self):
         print(self, " died")
 
+@dataclass
+class Player(CombatActor):
+    money: float = 10
+    mana: float = 0
+    maxMana: float = 50
+    healPotions: int = 0
+    manaPotions: int = 0
+
+@dataclass
+class Reward():
+    collect: Callable[[], None]
+    draw: Callable[[pygame.Surface], None]
+
 def checkEvents(playerWorldMap):
     for evt in pygame.event.get():
         if evt.type == pygame.QUIT:
@@ -42,6 +55,16 @@ def checkEvents(playerWorldMap):
                     if levelButton.checkAction(playerWorldMap):
                         break
 
+def genReward(currency, amount, player):
+    def collect():
+        player.__setattr__(currency, amount+player.__getattribute__(currency))
+    def draw(surface):
+        myText = Font.medium.render(f"+{amount} {currency}", True, Color.white)
+        myTextRect = myText.get_rect()
+        surface.blit(myText, myTextRect)
+    return Reward(collect, draw)
+
+
 def main():
     pygame.init()
     initFonts()
@@ -54,7 +77,7 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
-    player = CombatActor(10, 50, 50)
+    player = Player(10, 50, 50)
     oponent = CombatActor(10, 50, 50)
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
@@ -78,7 +101,10 @@ def main():
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
     returnTestButton = Button(ViewScreen.GachaScreen, 0, 300, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
-    gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, 0.0)
+    def getReward():
+        return genReward(random.choice(["health", "maxHealth", "mana", "maxMana", "strength", "healPotions", "manaPotions", "money"]), random.randint(1, 15), player)
+
+    gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)
 
     lastTime = time.time()
 
@@ -90,13 +116,6 @@ def main():
             surface.fill(Color.black)
 
         checkEvents(playerWorldMap)
-
-        if pygame.key.get_pressed()[pygame.K_SPACE] and lastTime - time.time() < -0.1:
-            lastTime = time.time()
-            randomNumber = random.randint(0, 10)
-            randomNumberText.text = f"{randomNumber}"
-            gachaAnimation.animationStartTime = time.time()
-            gachaAnimation.animationPlaying = True
             
         if pygame.key.get_pressed()[pygame.K_a] and lastTime - time.time() < -0.1:
             lastTime = time.time()

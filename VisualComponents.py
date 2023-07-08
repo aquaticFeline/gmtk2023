@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from collections.abc import Callable
+from gmtk2023 import *
 from standardClasses import *
 import pygame, time
 import stateVars
@@ -122,8 +123,10 @@ class PlayerWorldMap(VisualComponent):
 
 @dataclass
 class GachaAnimation(VisualComponent):
+    getReward: Callable[[], Reward]
+    player: Player
     completion: float = 0.0
-    reward: int = 0
+    reward: Reward = None
     animationStartTime: float = 0
     animationPlaying: bool = False
     
@@ -136,13 +139,42 @@ class GachaAnimation(VisualComponent):
         self.center = 250
         self.top = 50
         self.animationScale = 150
+        self.createRollButton()
 
+    def roll(self):
+        global buttons
+        self.animationStartTime = time.time()
+        self.animationPlaying = True
+        self.player.money -= 5
+        buttons.remove(self.rollButton)
+        visualComponents.remove(self.rollButton)
+        self.reward = self.getReward()
+
+    def animationComplete(self):
+        self.completion = 1
+        self.animationPlaying = False
+        self.createCollectButton()
+
+    def collectReward(self):
+        global buttons
+        self.completion = 0
+        self.createRollButton()
+        buttons.remove(self.collectButton)
+        visualComponents.remove(self.collectButton)
+        self.reward.collect()
+
+    def createRollButton(self):
+        self.rollButton = Button(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Roll $5", Font.medium, self.roll)
+
+    def createCollectButton(self):
+        self.collectButton = Button(self.viewScreen, self.center - 50, self.top+125, 100, 50, "Collect", Font.medium, self.collectReward)
+    
     def draw(self, surface):
         if self.animationPlaying:
             self.completion = (time.time() - self.animationStartTime)/3.0
             if self.completion > 1:
-                self.completion = 1
-                self.animationPlaying = False
+                self.animationComplete()
+
 
         leftRect = self.leftImage.get_rect()
         leftRect = leftRect.move(self.center-50-self.animationScale*self.completion, self.top)
@@ -153,5 +185,11 @@ class GachaAnimation(VisualComponent):
         surface.blit(self.rightImage, rightRect)
 
         centerRect = pygame.rect.Rect(self.center-self.animationScale*self.completion, self.top+12.5, 2*self.animationScale*self.completion+2, 175)
-        pygame.draw.rect(surface, (193, 190, 169), centerRect)  
+        #pygame.draw.rect(surface, (193, 190, 169), centerRect)
+
+        if self.reward is not None:
+            rewardSurface = pygame.Surface(centerRect.size)
+            rewardSurface.fill((193, 190, 169))
+            self.reward.draw(rewardSurface)
+            surface.blit(rewardSurface, centerRect)
 
