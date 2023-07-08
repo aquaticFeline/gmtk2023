@@ -28,7 +28,6 @@ def addAnimationToAttack(attack, animation):
         inAnimation = True
     def doPunchAttack():
         attack._attack(stateVars.player, stateVars.oponent)
-        nextTurn(stateVars.player)
     animation.onEnd = doPunchAttack
     attack.attack = punchAttackAttack
 

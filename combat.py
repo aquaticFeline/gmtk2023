@@ -53,7 +53,7 @@ class CombatActor:
         ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
 
     def doDeath(self):
-        global inAnimation
+        global inAnimation, delayNextTurn
         stateVars.enemyImage.reloadImage()
         for text in self.texts:
             visualComponents.remove(text)
@@ -91,6 +91,7 @@ class Attack:
             source.magicalAttack(target, self.strength, self.manaCost)
         else:
             source.physicalAttack(target, self.strength)
+        nextTurn(stateVars.player)
 
     def genText(self, position, useButton, viewScreen, elements):
         elements.append(HollowRect(viewScreen, position[0], position[1], 320, 150, 2.5))
@@ -225,3 +226,4 @@ class UsePotion(Attack):
         else:
             player.health += 50
             player.healPotions -= 1
+        nextTurn(player)
