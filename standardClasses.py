@@ -10,6 +10,7 @@ class ViewScreen(Enum):
     Test = 0
     WorldMap = 1
     GachaScreen = 2
+    Battle = 3
 
 def myQuit():
     pygame.quit()
@@ -22,6 +23,7 @@ def changeScreen(iViewScreen):
 class Color:
     white = (255, 255, 255)
     gray = (100, 100, 100)
+    darkGrey = (50, 50, 50)
     black = (0, 0, 0)
 
 class Font:
@@ -31,7 +33,9 @@ class Font:
     def font(**kwargs):
         return pygame.font.Font(kwargs)
 
+
 def initFonts():
     Font.large = pygame.font.Font(size = 60)
     Font.medium = pygame.font.Font(size = 28)
     Font.small = pygame.font.Font(size = 12)
+    #pygame.font.Font(size = 28).

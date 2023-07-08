@@ -1,5 +1,5 @@
-import pygame, sys, math, time, random
-from dataclasses import dataclass
+import pygame, sys, math, time, random, copy
+from dataclasses import dataclass, field
 from collections.abc import Callable
 from standardClasses import *
 from VisualComponents import *
@@ -8,9 +8,12 @@ import stateVars
 
 @dataclass
 class CombatActor:
-    strength: float
+    physicalStrength: float
+    magicalStrength: float
     _health: float
     maxHealth: float
+    _mana: float = 0
+    maxMana: float = 50
 
     @property 
     def health(self):
@@ -18,23 +21,118 @@ class CombatActor:
 
     @health.setter
     def health(self, val):
-        self._health = val
+        self._health = min(self.maxHealth, val)
         if val <= 0:
             self.die()
 
-    def attack(self, target):
-        target.health -= self.strength
+    @property 
+    def mana(self):
+        return self._mana
+
+    @mana.setter
+    def mana(self, val):
+        self._mana = min(self.maxMana, val)
+
+    def physicalAttack(self, target, strength):
+        target.health -= self.physicalStrength + strength
+
+    def magicalAttack(self, target, strength, cost):
+        target.health -= self.magicalStrength + strength
+        self.mana -= cost
+
+    def canCast(self, cost):
+        return cost <= self.mana
 
     def die(self):
         print(self, " died")
 
+    def genText(self, position):
+        DynamicText(ViewScreen.Battle, position[0], position[1], Font.medium, lambda x: f"Health: {self.health}/{self.maxHealth}")
+        DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"Mana: {self.mana}/{self.maxMana}")
+
+@dataclass
+class Attack:
+    strength: float
+    isMagic: bool
+    name: str
+    description: str
+    manaCost: float = 0
+    attack: Callable[[CombatActor, CombatActor], None] = None
+    canAttack: Callable[[CombatActor, CombatActor], bool] = None
+
+    def __post_init__(self):
+        self.attack = lambda x, y: self._attack(x, y)
+        self.canAttack = lambda x, y: (not self.isMagic) or self.manaCost <= x.mana
+
+    def _attack(self, source, target):
+        if self.isMagic:
+            source.magicalAttack(target, self.strength, manaCost)
+        else:
+            source.physicalAttack(target, self.strength)
+
+    def genText(self, position, useButton):
+        HollowRect(ViewScreen.Battle, position[0], position[1], 300, 150, 2.5)
+        DynamicText(ViewScreen.Battle, position[0], position[1], Font.large, lambda x: self.name)
+        DynamicText(ViewScreen.Battle, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}")
+        if self.isMagic:
+            DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize()+Font.large.get_linesize(), Font.medium, lambda x: f"Mana cost: {self.manaCost}")
+        
+        if useButton:
+            #if self.isMagic:
+            return DisableButton(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None, None)
+            #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
+
+
+
+
+
 @dataclass
 class Player(CombatActor):
+    attacks: list = field(default_factory=lambda: [])
     money: float = 10
-    mana: float = 0
-    maxMana: float = 50
     healPotions: int = 0
     manaPotions: int = 0
+
+    def canBuy(self, cost):
+        return cost <= self.money
+
+    def useHealPotion(self):
+        self.healPotions -= 1
+        health += 25
+
+    def canHealPotion(self):
+        return self.healPotions > 0
+
+    def useManaPotion(self):
+        self.manaPotions -= 1
+        mana += 25
+
+    def canManaPotion(self):
+        return self.manaPotions > 0
+
+    def genText(self, position, opponent):
+        super().genText(position)
+        DynamicText(ViewScreen.Battle, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium, lambda x: f"Physical Strength: {self.physicalStrength}")
+        DynamicText(ViewScreen.Battle, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"Magical Strength: {self.magicalStrength}")
+        DynamicText(ViewScreen.Battle, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"Healing Potions: {self.healPotions}")
+        DynamicText(ViewScreen.Battle, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"Mana Potions: {self.manaPotions}")
+
+        @dataclass
+        class AttackButtonContainer:
+            attack: Attack
+            def _attack(iself):
+                iself.attack.attack(self, opponent)
+            def canAttack(iself):
+                return not iself.attack.canAttack(self, opponent)
+
+        for i, attack in enumerate(self.attacks):
+            useButton = attack.genText((position[0], position[1]+6*(Font.medium.get_linesize())+i*150), True)
+            myAttack = AttackButtonContainer(attack)
+            useButton.action = myAttack._attack
+            useButton.isDisabled = myAttack.canAttack
+
+
+
 
 @dataclass
 class Reward():
@@ -77,8 +175,11 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
-    player = Player(10, 50, 50)
-    oponent = CombatActor(10, 50, 50)
+    player = Player(10, 10, 50, 50)
+    oponent = CombatActor(10, 10, 50, 50)
+
+    player.attacks.append(Attack(10.0, False, "Punch", "punch 'em in the face"))
+    player.attacks.append(Attack(10.0, True, "Fire Ball", "Shoots a fire ball", 20.0))
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
 
@@ -86,11 +187,14 @@ def main():
     playerHealthText = DynamicText(ViewScreen.Test, 0, 50, Font.large, lambda self: f"{player.health}")
     oponentHealthText = DynamicText(ViewScreen.Test, 0, 100, Font.large, lambda self: f"{oponent.health}")
     
-    playerAttackButton = Button(ViewScreen.Test, 100, 50, 150, 40, "Player Attack", pygame.font.Font(size=30), lambda: player.attack(oponent))
-    opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.attack(player))
+    playerAttackButton = Button(ViewScreen.Test, 100, 50, 150, 40, "Player Attack", pygame.font.Font(size=30), lambda: player.physicalAttack(oponent))
+    opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.physicalAttack(player))
 
     worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
     returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
+
+    worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
+    returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     level0 = LevelButton(ViewScreen.WorldMap, 50, 50)
     level1 = LevelButton(ViewScreen.WorldMap, 150, 100)
@@ -101,8 +205,11 @@ def main():
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
     returnTestButton = Button(ViewScreen.GachaScreen, 0, 300, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
+    player.genText((0, 0), oponent)
+    oponent.genText((400, 0))
+
     def getReward():
-        return genReward(random.choice(["health", "maxHealth", "mana", "maxMana", "strength", "healPotions", "manaPotions", "money"]), random.randint(1, 15), player)
+        return genReward(random.choice(["health", "maxHealth", "mana", "maxMana", "physicalStrength", "magicalStrength", "healPotions", "manaPotions", "money"]), random.randint(1, 15), player)
 
     gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)
 

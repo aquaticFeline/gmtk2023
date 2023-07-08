@@ -72,6 +72,22 @@ class Button(VisualComponent):
         return False
 
 @dataclass
+class DisableButton(Button):
+    isDisabled: Callable[[], bool]
+
+    def draw(self, surface):
+        if self.isDisabled():
+            rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+            pygame.draw.rect(surface, Color.darkGrey, rect)    
+            ButtonText = self.font.render(f"{self.text}", True, Color.black)
+            surface.blit(ButtonText, rect)
+            return
+        super().draw(surface)
+
+    def checkAction(self):
+        return not self.isDisabled() and super().checkAction() 
+
+@dataclass
 class LevelButton(VisualComponent):
     x: float
     y: float
@@ -122,6 +138,21 @@ class PlayerWorldMap(VisualComponent):
         surface.blit(self.image, rect)
 
 @dataclass
+class HollowRect(VisualComponent):
+    x: float
+    y: float
+    width: float
+    height: float
+    weight: float
+
+    def draw(self, surface):
+        smallRect = pygame.rect.Rect(self.x+self.weight, self.y+self.weight, self.width-self.weight*2, self.height-self.weight*2)
+        bigRect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+        pygame.draw.rect(surface, Color.white, bigRect)
+        pygame.draw.rect(surface, Color.black, smallRect)
+
+
+@dataclass
 class GachaAnimation(VisualComponent):
     getReward: Callable[[], Reward]
     player: Player
@@ -164,7 +195,7 @@ class GachaAnimation(VisualComponent):
         self.reward.collect()
 
     def createRollButton(self):
-        self.rollButton = Button(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Roll $5", Font.medium, self.roll)
+        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Roll $5", Font.medium, self.roll, lambda: not self.player.canBuy(5))
 
     def createCollectButton(self):
         self.collectButton = Button(self.viewScreen, self.center - 50, self.top+125, 100, 50, "Collect", Font.medium, self.collectReward)
