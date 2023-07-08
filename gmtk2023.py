@@ -46,7 +46,7 @@ def main():
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
     stateVars.enemyImage = enemyImage
 
-    player = Player(10, 10, 100, 100, money = 100)
+    player = Player(10, 10, 100, 100, money = 100, _mana = 20)
     stateVars.player = player
     spawnEnemy()
 

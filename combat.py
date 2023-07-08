@@ -53,6 +53,7 @@ class CombatActor:
         ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
 
     def doDeath(self):
+        global inAnimation
         stateVars.enemyImage.reloadImage()
         for text in self.texts:
             visualComponents.remove(text)
@@ -61,6 +62,7 @@ class CombatActor:
         spawnEnemy()
         delayNextTurn = False
         nextTurn(stateVars.player)
+        inAnimation = False
 
     def genText(self, position, viewScreen):
         self.texts = []
@@ -186,10 +188,12 @@ class Player(CombatActor):
             class AttackButtonContainer:
                 attack: Attack
                 def _attack(iself):
+                    global inAnimation
+                    inAnimation = True
                     iself.attack.attack(self, stateVars.oponent)
                 def canAttack(iself):
                     global oponent
-                    return not iself.attack.canAttack(self, oponent)
+                    return not iself.attack.canAttack(self, oponent) or inAnimation
 
         for i, attack in enumerate(self.attacks):
             useButton = attack.genText((position[0], position[1]+7*(Font.medium.get_linesize())+i*150), isUseButton, viewScreen, self.elements)
