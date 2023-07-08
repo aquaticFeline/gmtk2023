@@ -45,16 +45,26 @@ class Button(VisualComponent):
     def __post_init__(self):
         super().__post_init__()
         buttons.append(self)
+        self.stars = [pygame.image.load("assets\\activeStar.png"), pygame.image.load("assets\\activeStar.png")]
+        self.stars = [pygame.transform.scale(star, (25, 25)) for star in self.stars]
+
+    def drawConfig(self):
+        mouse = pygame.mouse.get_pos()
+        backColor = Color.gray if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else Color.white
+        textColor = Color.black
+        star = self.stars[0] if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else self.stars[1]
+        return backColor, textColor, star
 
     def draw(self, surface):
-        mouse = pygame.mouse.get_pos()
+        backColor, textColor, star = self.drawConfig()
+
         rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
-        if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
-            pygame.draw.rect(surface, Color.gray, rect)
-        else:
-            pygame.draw.rect(surface, Color.white, rect)    
-        ButtonText = self.font.render(f"{self.text}", True, Color.black)
-        surface.blit(ButtonText, rect)
+        pygame.draw.rect(surface, backColor, rect) 
+        ButtonText = self.font.render(f"{self.text}", True, textColor)
+        ButtonTextRect = ButtonText.get_rect()
+        ButtonTextRect = ButtonTextRect.move((rect.width - ButtonTextRect.width)/2.0, (rect.height - ButtonTextRect.height)/2.0)
+        ButtonTextRect = ButtonTextRect.move(self.x, self.y)
+        surface.blit(ButtonText, ButtonTextRect)
 
     def checkAction(self):
         mouse = pygame.mouse.get_pos()
@@ -67,14 +77,18 @@ class Button(VisualComponent):
 class DisableButton(Button):
     isDisabled: Callable[[], bool]
 
-    def draw(self, surface):
+    def __post_init__(self):
+        super().__post_init__()
+        self.stars.append(pygame.image.load("assets\\disableStar.png"))
+        self.stars = [pygame.transform.scale(star, (25, 25)) for star in self.stars]
+
+    def drawConfig(self):
         if self.isDisabled():
-            rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
-            pygame.draw.rect(surface, Color.darkGrey, rect)    
-            ButtonText = self.font.render(f"{self.text}", True, Color.black)
-            surface.blit(ButtonText, rect)
-            return
-        super().draw(surface)
+            backColor = Color.darkGrey
+            textColor = Color.black
+            star = None
+            return backColor, textColor, star
+        return super().drawConfig()
 
     def checkAction(self):
         return not self.isDisabled() and super().checkAction() 
