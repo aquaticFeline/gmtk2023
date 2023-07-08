@@ -45,13 +45,47 @@ def main():
     playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
     stateVars.enemyImage = enemyImage
+    stateVars.playerImage = playerImage
+
+    punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
+    punchAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
+    addAnimationToAttack(punchAttack, punchAttackAnimation)
+        
+    shredAttack =  Attack(10.0, False, "Shred", "Shreds the opponent with claws")
+    shredAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
+    addAnimationToAttack(shredAttack, shredAttackAnimation)
+
+    bonkAttack = Attack(15.0, False, "Bonk", "Staff bonk!")
+    bonkAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
+    addAnimationToAttack(bonkAttack, bonkAttackAnimation)
+
+    waterBoltAttack = Attack(10.0, True, "Water Bolt", "Shoots a bolt of water", 15.0)
+        
+    plantShroudAttack = Attack(15.0, True, "Plant Shroud", "Circles the opponent in plants", 20.0)
+
+    enlightenmentAttack = Attack(20.0, True, "Enlightenment", "Light rains down on opponent", 30.0)
+
+    frostAttack = Attack(20.0, True, "Frost", "Chills opponent", 20.0)
+
+    shadowfallAttack = Attack(25.0, True, "Shadowfall", "Opponent glimpses the shadow realm, briefly", 20.0)
+
+    fireBallAttack = Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0)
+
+    stateVars.punchAttack = punchAttack
+    stateVars.shredAttack = shredAttack
+    stateVars.bonkAttack = bonkAttack
+    stateVars.waterBoltAttack = waterBoltAttack
+    stateVars.plantShroudAttack = plantShroudAttack
+    stateVars.enlightenmentAttack = enlightenmentAttack
+    stateVars.frostAttack = frostAttack
+    stateVars.shadowfallAttack = shadowfallAttack
+    stateVars.fireBallAttack = fireBallAttack
 
     player = Player(10, 10, 100, 100, money = 100, _mana = 20)
     stateVars.player = player
     spawnEnemy()
 
     punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
-
 
     player.attacks.insert(0, Attack(0.0, False, "None", "None"))
     player.attacks.insert(0, Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
