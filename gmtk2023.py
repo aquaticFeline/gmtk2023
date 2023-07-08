@@ -72,7 +72,7 @@ def main():
     playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-12.5, 300-50)
 
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
-    returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
+    returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.WorldMap))
 
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])

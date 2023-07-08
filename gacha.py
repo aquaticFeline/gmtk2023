@@ -37,7 +37,7 @@ def clearButtons():
 def _genSwapButton(player, attack, i):
     position = (0, 0)
     #position[0]+235, position[1]+10, 65, 35, "Use", pygame.font.Font(size=48), 
-    swapButons.append(Button(ViewScreen.GachaScreen, position[0]+210, position[1]+6*(Font.medium.get_linesize())+i*150+10, 85, 35, "Swap", pygame.font.Font(size=48), lambda: swap(player, attack, i)))
+    swapButons.append(Button(ViewScreen.GachaScreen, position[0]+210, position[1]+6*(Font.medium.get_linesize())+i*150+10, 95, 45, "Swap", pygame.font.Font(size=48), lambda: swap(player, attack, i)))
 
 def genSwapButtons(player, attack):
     global swapping
