@@ -109,9 +109,22 @@ def genCurrencyReward(currency, name, icon, amount, player):
     def collect():
         player.__setattr__(currency, amount+player.__getattribute__(currency))
     def draw(surface):
-        myText = Font.medium.render(f"+{amount} {currency}", True, Color.white)
+        myText = Font.medium.render(f"+{amount} {name}", True, Color.white)
         myTextRect = myText.get_rect()
+        myTextRect = myTextRect.move((450-myTextRect.width)/2.0, 30)
         surface.blit(myText, myTextRect)
+        bigText = Font.large.render(f"+{amount}  ", True, Color.white)
+        bigTextRect = bigText.get_rect()
+        bigTextRect = bigTextRect.move((450-bigTextRect.width)/2.0, 120)
+        surface.blit(bigText, bigTextRect)
+
+        iconImg.x = bigTextRect.x+60
+        iconImg.y = bigTextRect.y
+        iconImg.draw(surface)
+
+    iconImg = createIcon(ViewScreen.Test, icon, 0, 0, Font.large)
+    visualComponents.remove(iconImg)
+
     return Reward(collect, draw)
 
 @dataclass
