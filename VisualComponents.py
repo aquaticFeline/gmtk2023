@@ -40,6 +40,10 @@ class Text(DynamicText):
         super().__post_init__()
         self.getText = lambda x: self.text
 
+def genMultilineText(text, viewScreen, x, y, font):
+    for i, line in enumerate(text.split('\n')):
+        Text(viewScreen, x, y+font.get_linesize()*i, font, None, line)
+
 @dataclass
 class Button(VisualComponent):
     x: float
@@ -91,6 +95,7 @@ class DisableButton(Button):
 class LevelButton(VisualComponent):
     x: float
     y: float
+    level: Levels
 
     def __post_init__(self):
         super().__post_init__()
@@ -109,6 +114,7 @@ class LevelButton(VisualComponent):
         if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
             playerWorldMap.x = self.x - 12.5
             playerWorldMap.y = self.y - 50
+            stateVars.selectLevel = self.level
             return True
         return False
 
@@ -161,10 +167,33 @@ class Image(VisualComponent):
 
     def __post_init__(self):
         super().__post_init__()
-        self.image = pygame.image.load(imageFile)
-        self.image = pygame.transform.scale(self.image, (width, height))
+        self.image = pygame.image.load(self.imageFile)
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     def draw(self, surface):
+        imageRect = self.image.get_rect()
+        imageRect = imageRect.move(self.x, self.y)
+        surface.blit(self.image, imageRect)
+
+levelImageFiles = {Levels.Cemetery : "assets\\cemetery_map.png", Levels.Woods : "assets\\forest_map.png", Levels.Meadows : "assets\\meadow_map.png"}
+
+@dataclass
+class BattleBkgrdImage(VisualComponent):
+    x: float
+    y: float
+    width:float
+    height: float
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.images = {}
+        for ele in levelImageFiles:
+            self.images[ele] = pygame.image.load(levelImageFiles[ele])
+            self.images[ele] = pygame.transform.scale(self.images[ele], (self.width, self.height))
+
+    def draw(self, surface):
+        self.image = self.images[stateVars.selectLevel]
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         imageRect = self.image.get_rect()
         imageRect = imageRect.move(self.x, self.y)
         surface.blit(self.image, imageRect)

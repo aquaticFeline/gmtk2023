@@ -33,9 +33,13 @@ class Font:
     def font(**kwargs):
         return pygame.font.Font(kwargs)
 
+class Levels(Enum):
+    Cemetery = 0
+    Woods = 1
+    Meadows = 2
 
 def initFonts():
     Font.large = pygame.font.Font(size = 60)
-    Font.medium = pygame.font.Font(size = 28)
-    Font.small = pygame.font.Font(size = 12)
+    Font.medium = pygame.font.Font(size = 32)
+    Font.small = pygame.font.Font(size = 18)
     #pygame.font.Font(size = 28).

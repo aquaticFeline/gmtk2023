@@ -5,6 +5,7 @@ from standardClasses import *
 from VisualComponents import *
 import stateVars
 
+player, oponent = None, None
 
 @dataclass
 class CombatActor:
@@ -44,11 +45,18 @@ class CombatActor:
         return cost <= self.mana
 
     def die(self):
-        print(self, " died")
+        global visualComponents
+        #print(self, " died")
+        for text in self.texts:
+            visualComponents.remove(text)
+        player.mana += 10
+        player.money += 10
+        spawnEnemy()
 
     def genText(self, position):
-        DynamicText(ViewScreen.Battle, position[0], position[1], Font.medium, lambda x: f"Health: {self.health}/{self.maxHealth}")
-        DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"Mana: {self.mana}/{self.maxMana}")
+        self.texts = []
+        self.texts.append(DynamicText(ViewScreen.Battle, position[0], position[1], Font.medium, lambda x: f"Health: {self.health}/{self.maxHealth}"))
+        self.texts.append(DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"Mana: {self.mana}/{self.maxMana}"))
 
 @dataclass
 class Attack:
@@ -66,7 +74,7 @@ class Attack:
 
     def _attack(self, source, target):
         if self.isMagic:
-            source.magicalAttack(target, self.strength, manaCost)
+            source.magicalAttack(target, self.strength, self.manaCost)
         else:
             source.physicalAttack(target, self.strength)
 
@@ -76,14 +84,22 @@ class Attack:
         DynamicText(ViewScreen.Battle, position[0], position[1]+Font.large.get_linesize(), Font.medium, lambda x: f"Strength: {self.strength}")
         if self.isMagic:
             DynamicText(ViewScreen.Battle, position[0], position[1]+Font.medium.get_linesize()+Font.large.get_linesize(), Font.medium, lambda x: f"Mana cost: {self.manaCost}")
+        genMultilineText(self.description, ViewScreen.Battle, position[0], position[1]+(2 if self.isMagic else 1)*Font.medium.get_linesize()+Font.large.get_linesize(), Font.small)
         
         if useButton:
             #if self.isMagic:
             return DisableButton(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None, None)
             #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
+def nextTurn():
+    oponent.physicalAttack(player, 10)
+    player.mana += 10
+    oponent.mana += 10
 
-
+def spawnEnemy():
+    global oponent
+    oponent = CombatActor(10, 10, 50, 50)
+    oponent.genText((1250, 0))
 
 
 @dataclass
@@ -121,15 +137,25 @@ class Player(CombatActor):
         class AttackButtonContainer:
             attack: Attack
             def _attack(iself):
-                iself.attack.attack(self, opponent)
+                global oponent
+                iself.attack.attack(self, oponent)
+                nextTurn()
             def canAttack(iself):
-                return not iself.attack.canAttack(self, opponent)
+                global oponent
+                return not iself.attack.canAttack(self, oponent)
 
         for i, attack in enumerate(self.attacks):
             useButton = attack.genText((position[0], position[1]+6*(Font.medium.get_linesize())+i*150), True)
             myAttack = AttackButtonContainer(attack)
             useButton.action = myAttack._attack
             useButton.isDisabled = myAttack.canAttack
+    
+    def die(self):
+        self.health = self.maxHealth
+        self.money = 0
+        changeScreen(ViewScreen.WorldMap)
+        player.mana = 0
+
 
 
 
@@ -164,22 +190,26 @@ def genReward(currency, amount, player):
 
 
 def main():
+    global player, oponent
     pygame.init()
     initFonts()
     stateVars.viewScreen = ViewScreen.Test
+    stateVars.selectLevel = Levels.Cemetery
 
-    screen_size = screen_width, screen_height = (1000, 500)
+    screen_size = screen_width, screen_height = (1600, 900)
     screen = pygame.display.set_mode(screen_size)
     screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
 
+    Image(ViewScreen.WorldMap, 0, 0, screen_width, screen_height, "assets\worldmap.png")
+    BattleBkgrdImage(ViewScreen.Battle, 0, 0, screen_width, screen_height)
     
     randomNumber = random.randint(0, 10)
 
-    player = Player(10, 10, 50, 50)
-    oponent = CombatActor(10, 10, 50, 50)
+    player = Player(10, 10, 100, 100)
+    spawnEnemy()
 
-    player.attacks.append(Attack(10.0, False, "Punch", "punch 'em in the face"))
-    player.attacks.append(Attack(10.0, True, "Fire Ball", "Shoots a fire ball", 20.0))
+    player.attacks.append(Attack(10.0, False, "Punch", "punch 'em \nin the face"))
+    player.attacks.append(Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
 
@@ -194,19 +224,25 @@ def main():
     returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
+    worldMapButton = Button(ViewScreen.WorldMap, 1400, 50, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
     returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
-    level0 = LevelButton(ViewScreen.WorldMap, 50, 50)
-    level1 = LevelButton(ViewScreen.WorldMap, 150, 100)
-    levelLine = Line(ViewScreen.WorldMap, 50, 50, 150, 100)
+    level0 = LevelButton(ViewScreen.WorldMap, 300, 300, Levels.Cemetery)
+    level1 = LevelButton(ViewScreen.WorldMap, 700, 525, Levels.Woods)
+    levelLine01 = Line(ViewScreen.WorldMap, 300, 300, 700, 525)
+    level2 = LevelButton(ViewScreen.WorldMap, 1250, 800, Levels.Meadows)
+    levelLine12 = Line(ViewScreen.WorldMap, 700, 525, 1250, 800)
 
-    playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 37.5, 0)
+    playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-12.5, 300-50)
 
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
     returnTestButton = Button(ViewScreen.GachaScreen, 0, 300, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
+    levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
+    DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
+
     player.genText((0, 0), oponent)
-    oponent.genText((400, 0))
+    #oponent.genText((400, 0))
 
     def getReward():
         return genReward(random.choice(["health", "maxHealth", "mana", "maxMana", "physicalStrength", "magicalStrength", "healPotions", "manaPotions", "money"]), random.randint(1, 15), player)
