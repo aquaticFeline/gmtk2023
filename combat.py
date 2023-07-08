@@ -5,6 +5,7 @@ from standardClasses import *
 #import VisualComponents
 
 oponent = None
+inAnimation = False
 
 @dataclass
 class CombatActor:
@@ -93,6 +94,7 @@ class Attack:
             #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
 def nextTurn(player):
+    inAnimation = True
     stateVars.oponent.physicalAttack(player, 10)
     player.mana += 10
     stateVars.oponent.mana += 10
