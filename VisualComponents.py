@@ -151,6 +151,23 @@ class HollowRect(VisualComponent):
         pygame.draw.rect(surface, Color.white, bigRect)
         pygame.draw.rect(surface, Color.black, smallRect)
 
+@dataclass
+class Image(VisualComponent):
+    x: float
+    y: float
+    width:float
+    height: float
+    imageFile: str
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.image = pygame.image.load(imageFile)
+        self.image = pygame.transform.scale(self.image, (width, height))
+
+    def draw(self, surface):
+        imageRect = self.image.get_rect()
+        imageRect = imageRect.move(self.x, self.y)
+        surface.blit(self.image, imageRect)
 
 @dataclass
 class GachaAnimation(VisualComponent):
