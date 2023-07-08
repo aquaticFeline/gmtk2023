@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from combat import *
 import time
 
+
 animations = []
 
 class Animation:
@@ -72,6 +73,7 @@ class ShrinkAnimation(Animation):
             else:
                 self.actor.width = self.startX*(1-completion)
                 self.actor.height = self.startY*(1-completion)
+
 
 
 

@@ -10,6 +10,17 @@ from Animations import *
 
 player= None
 
+def addAnimationToAttack(attack, animation):
+    def punchAttackAttack(x, y):
+        global inAnimation
+        animation.start()
+        inAnimation = True
+    def doPunchAttack():
+        attack._attack(stateVars.player, stateVars.oponent)
+        nextTurn(stateVars.player)
+    animation.onEnd = doPunchAttack
+    attack.attack = punchAttackAttack
+
 def checkEvents(playerWorldMap):
     for evt in pygame.event.get():
         if evt.type == pygame.QUIT:
@@ -29,7 +40,7 @@ def main():
     global player, oponent
     pygame.init()
     initFonts()
-    stateVars.viewScreen = ViewScreen.Test
+    stateVars.viewScreen = ViewScreen.WorldMap
     stateVars.selectLevel = Levels.Cemetery
 
     screen_size = screen_width, screen_height = (1600, 900)
@@ -66,11 +77,12 @@ def main():
     opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.physicalAttack(player))
 
     worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
-    returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
+    worldMapButton = Button(ViewScreen.Battle, 1200, 850, 300, 50, "Run From Battle", pygame.font.Font(size=28), lambda: changeScreen(ViewScreen.WorldMap))
+    #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
     worldMapButton = Button(ViewScreen.WorldMap, 1400, 50, 150, 50, "To Battle", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.Battle))
-    returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
+    #returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     level0 = LevelButton(ViewScreen.WorldMap, 300, 300, Levels.Cemetery)
     level1 = LevelButton(ViewScreen.WorldMap, 700, 525, Levels.Woods)
@@ -83,18 +95,13 @@ def main():
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
     returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.WorldMap))
 
+    GoToGachaButton(ViewScreen.WorldMap, 1300, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
+
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
-
-    def punchAttackAttack(x, y):
-        global inAnimation
-        punchAttackAnimation.start()
-        inAnimation = True
-    def doPunchAttack():
-        punchAttack._attack(player, stateVars.oponent)
-        nextTurn(player)
-    punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, doPunchAttack)
-    punchAttack.attack = punchAttackAttack
+    
+    punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
+    addAnimationToAttack(punchAttack, punchAttackAnimation)
 
     regenPlayerText()
     #oponent.genText((400, 0))
@@ -107,6 +114,8 @@ def main():
         screen.fill(Color.black)
         for surface in viewSurfaces.values():
             surface.fill(Color.black)
+
+        viewSurfaces[ViewScreen.GachaScreen].fill((173, 117, 66))
 
         checkEvents(playerWorldMap)
 

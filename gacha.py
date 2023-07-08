@@ -162,3 +162,60 @@ class GachaAnimation(VisualComponent):
             rewardSurface.fill((193, 190, 169))
             self.reward.draw(rewardSurface)
             surface.blit(rewardSurface, centerRect)
+
+            
+@dataclass
+class GoToGachaButton(VisualComponent):
+    x: float
+    y: float
+    width: float
+    height: float
+    imageFile: str
+    action: Callable[[], None]
+
+    def __post_init__(self):
+        super().__post_init__()
+        buttons.append(self)
+        self.image = pygame.image.load(self.imageFile)
+        self.animating = False
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.completion = 0
+
+    def triggerAnimation(self):
+        self.animating = True
+        self.startTime = time.time()
+
+    def stopAnimation(self):
+        self.animating = False
+
+    def draw(self, surface):
+        mouse = pygame.mouse.get_pos()
+        if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
+            if not self.animating and self.completion <= 0:
+                self.triggerAnimation()
+            if self.animating and self.completion > 1:
+                self.stopAnimation()
+        else:
+            if not self.animating and self.completion >= 1:
+                self.triggerAnimation()
+            if self.animating and self.completion < 0:
+                self.stopAnimation()
+        if self.animating:
+            if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
+                self.completion = (time.time()-self.startTime)/2.5
+            else:
+                self.completion = 1-(time.time()-self.startTime)/2.5
+
+        imageRect = self.image.get_rect()
+        imageRect = imageRect.move(self.x, self.y-self.completion*150)
+        surface.blit(self.image, imageRect)
+
+
+
+
+    def checkAction(self):
+        mouse = pygame.mouse.get_pos()
+        if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
+            self.action()
+            return True
+        return False
