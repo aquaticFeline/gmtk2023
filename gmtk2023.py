@@ -10,17 +10,6 @@ from Animations import *
 
 player= None
 
-def addAnimationToAttack(attack, animation):
-    def punchAttackAttack(x, y):
-        global inAnimation
-        animation.start()
-        inAnimation = True
-    def doPunchAttack():
-        attack._attack(stateVars.player, stateVars.oponent)
-        nextTurn(stateVars.player)
-    animation.onEnd = doPunchAttack
-    attack.attack = punchAttackAttack
-
 def checkEvents(playerWorldMap):
     for evt in pygame.event.get():
         if evt.type == pygame.QUIT:
@@ -40,6 +29,7 @@ def main():
     global player, oponent
     pygame.init()
     initFonts()
+    initIcons()
     stateVars.viewScreen = ViewScreen.WorldMap
     stateVars.selectLevel = Levels.Cemetery
 
@@ -90,12 +80,12 @@ def main():
     level2 = LevelButton(ViewScreen.WorldMap, 1250, 800, Levels.Meadows)
     levelLine12 = Line(ViewScreen.WorldMap, 700, 525, 1250, 800)
 
-    playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-12.5, 300-50)
+    playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-75*0.5, 300-150)
 
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
     returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.WorldMap))
 
-    GoToGachaButton(ViewScreen.WorldMap, 1300, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
+    GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
 
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])

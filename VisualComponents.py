@@ -124,7 +124,7 @@ class LevelButton(VisualComponent):
     def __post_init__(self):
         super().__post_init__()
         levelButtons.append(self)
-        self.radius = 15
+        self.radius = 30
 
     def draw(self, surface):
         mouse = pygame.mouse.get_pos()
@@ -136,8 +136,8 @@ class LevelButton(VisualComponent):
     def checkAction(self, playerWorldMap):
         mouse = pygame.mouse.get_pos()
         if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
-            playerWorldMap.x = self.x - 12.5
-            playerWorldMap.y = self.y - 50
+            playerWorldMap.x = self.x - 75*0.5
+            playerWorldMap.y = self.y - 150
             stateVars.selectLevel = self.level
             return True
         return False
@@ -159,8 +159,8 @@ class PlayerWorldMap(VisualComponent):
 
     def __post_init__(self):
         super().__post_init__()
-        self.image = pygame.image.load("assets/stick man.png")
-        self.image = pygame.transform.scale(self.image, (25, 50))
+        self.image = pygame.image.load("assets/protag.png")
+        self.image = pygame.transform.scale(self.image, (75, 150))
 
     def draw(self, surface):
         rect = self.image.get_rect()
@@ -225,4 +225,5 @@ class BattleBkgrdImage(VisualComponent):
         imageRect = imageRect.move(self.x, self.y)
         surface.blit(self.image, imageRect)
 
-
+def createIcon(viewScreen, icon, x, y, font):
+    Image(viewScreen, x, y, font.get_linesize(), font.get_linesize(), iconImageFiles[icon])

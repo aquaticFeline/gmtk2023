@@ -165,6 +165,7 @@ class Player(CombatActor):
         self.elements.append(DynamicText(viewScreen, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"Magical Strength: {self.magicalStrength}"))
         self.elements.append(DynamicText(viewScreen, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"Healing Potions: {self.healPotions}"))
         self.elements.append(DynamicText(viewScreen, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"Mana Potions: {self.manaPotions}"))
+        self.elements.append(DynamicText(viewScreen, position[0], position[1]+6*(Font.medium.get_linesize()), Font.medium, lambda x: f"Money: {self.money}"))
 
         if isUseButton:
             @dataclass
@@ -177,7 +178,7 @@ class Player(CombatActor):
                     return not iself.attack.canAttack(self, oponent)
 
         for i, attack in enumerate(self.attacks):
-            useButton = attack.genText((position[0], position[1]+6*(Font.medium.get_linesize())+i*150), isUseButton, viewScreen, self.elements)
+            useButton = attack.genText((position[0], position[1]+7*(Font.medium.get_linesize())+i*150), isUseButton, viewScreen, self.elements)
             if isUseButton:
                 self.elements.append(useButton)
                 self.buttons.append(useButton)

@@ -21,6 +21,17 @@ import random
 swapButons = []
 swapping = False
 
+def addAnimationToAttack(attack, animation):
+    def punchAttackAttack(x, y):
+        global inAnimation
+        animation.start()
+        inAnimation = True
+    def doPunchAttack():
+        attack._attack(stateVars.player, stateVars.oponent)
+        nextTurn(stateVars.player)
+    animation.onEnd = doPunchAttack
+    attack.attack = punchAttackAttack
+
 def swap(player, attack, position):
     player.attacks[position] = attack
     regenPlayerText()
@@ -37,7 +48,7 @@ def clearButtons():
 def _genSwapButton(player, attack, i):
     position = (0, 0)
     #position[0]+235, position[1]+10, 65, 35, "Use", pygame.font.Font(size=48), 
-    swapButons.append(Button(ViewScreen.GachaScreen, position[0]+210, position[1]+6*(Font.medium.get_linesize())+i*150+10, 95, 45, "Swap", pygame.font.Font(size=48), lambda: swap(player, attack, i)))
+    swapButons.append(Button(ViewScreen.GachaScreen, position[0]+210, position[1]+7*(Font.medium.get_linesize())+i*150+10, 95, 45, "Swap", pygame.font.Font(size=48), lambda: swap(player, attack, i)))
 
 def genSwapButtons(player, attack):
     global swapping
