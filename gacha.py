@@ -154,6 +154,7 @@ class GachaAnimation(VisualComponent):
         self.player.money -= 5
         buttons.remove(self.rollButton)
         visualComponents.remove(self.rollButton)
+        visualComponents.remove(self.rollCost)
         self.reward = self.getReward()
 
     def animationComplete(self):
@@ -170,7 +171,8 @@ class GachaAnimation(VisualComponent):
         self.reward.collect()
 
     def createRollButton(self):
-        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+325, 100, 50, "Roll $5", Font.medium, self.roll, lambda: not self.player.canBuy(5) or swapping)
+        self.rollButton = DisableButton(self.viewScreen, self.center - 50, self.top+325, 100, 50, "Roll 5    ", Font.medium, self.roll, lambda: not self.player.canBuy(5) or swapping)
+        self.rollCost = createIcon(self.viewScreen, Icon.Coin, self.center-50 + 6*12, self.top+325+15, Font.medium)
 
     def createCollectButton(self):
         self.collectButton = Button(self.viewScreen, self.center - 50, self.top+225, 100, 50, "Collect", Font.medium, self.collectReward)
