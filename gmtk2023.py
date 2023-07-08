@@ -101,6 +101,9 @@ def spawnEnemy():
     oponent = CombatActor(10, 10, 50, 50)
     oponent.genText((1250, 0))
 
+class UsePotion(Attack):
+    pass
+
 
 @dataclass
 class Player(CombatActor):
