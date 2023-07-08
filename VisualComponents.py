@@ -189,10 +189,13 @@ class Image(VisualComponent):
 
     def __post_init__(self):
         super().__post_init__()
+        self.reloadImage()
+
+    def reloadImage(self):
         self.image = pygame.image.load(self.imageFile)
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     def draw(self, surface):
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         imageRect = self.image.get_rect()
         imageRect = imageRect.move(self.x, self.y)
         surface.blit(self.image, imageRect)

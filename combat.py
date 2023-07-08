@@ -2,10 +2,12 @@ from dataclasses import dataclass, field
 from collections.abc import Callable
 from VisualComponents import *
 from standardClasses import *
+from Animations import *
 #import VisualComponents
 
 oponent = None
 inAnimation = False
+delayNextTurn = False
 
 @dataclass
 class CombatActor:
@@ -45,13 +47,20 @@ class CombatActor:
         return cost <= self.mana
 
     def die(self):
-        global visualComponents
+        global visualComponents, delayNextTurn
         #print(self, " died")
+        delayNextTurn = True
+        ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
+
+    def doDeath(self):
+        stateVars.enemyImage.reloadImage()
         for text in self.texts:
             visualComponents.remove(text)
         stateVars.player.mana += 10
         stateVars.player.money += 10
         spawnEnemy()
+        delayNextTurn = False
+        nextTurn(stateVars.player)
 
     def genText(self, position, viewScreen):
         self.texts = []
@@ -94,14 +103,19 @@ class Attack:
             #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
 def nextTurn(player):
-    inAnimation = True
-    stateVars.oponent.physicalAttack(player, 10)
-    player.mana += 10
-    stateVars.oponent.mana += 10
+    global inAnimation
+    if not delayNextTurn:
+        inAnimation = True
+        stateVars.oponent.physicalAttack(player, 10)
+        player.mana += 10
+        stateVars.oponent.mana += 10
+        inAnimation = False
 
 def spawnEnemy():
     stateVars.oponent = CombatActor(10, 10, 50, 50)
     stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
+    stateVars.enemyImage.width = 225
+    stateVars.enemyImage.height = 450
 
 def regenPlayerText():
     for element in stateVars.player.elements:
@@ -158,7 +172,6 @@ class Player(CombatActor):
                 attack: Attack
                 def _attack(iself):
                     iself.attack.attack(self, stateVars.oponent)
-                    nextTurn(self)
                 def canAttack(iself):
                     global oponent
                     return not iself.attack.canAttack(self, oponent)

@@ -41,6 +41,10 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
+    playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
+    enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
+    stateVars.enemyImage = enemyImage
+
     player = Player(10, 10, 100, 100, money = 100)
     stateVars.player = player
     spawnEnemy()
@@ -82,11 +86,15 @@ def main():
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
     DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
 
-    playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
-    enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
-
-    punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 5.0, 400, 275, 2.5, lambda: punchAttack._attack(player, stateVars.oponent))
-    punchAttack.attack = lambda x, y: punchAttackAnimation.start()
+    def punchAttackAttack(x, y):
+        global inAnimation
+        punchAttackAnimation.start()
+        inAnimation = True
+    def doPunchAttack():
+        punchAttack._attack(player, stateVars.oponent)
+        nextTurn(player)
+    punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, doPunchAttack)
+    punchAttack.attack = punchAttackAttack
 
     regenPlayerText()
     #oponent.genText((400, 0))
