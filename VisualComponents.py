@@ -183,7 +183,7 @@ class HollowRect(VisualComponent):
         smallRect = pygame.rect.Rect(self.x+self.weight, self.y+self.weight, self.width-self.weight*2, self.height-self.weight*2)
         bigRect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
         pygame.draw.rect(surface, Color.white, bigRect)
-        pygame.draw.rect(surface, (111, 47, 28), smallRect)
+        pygame.draw.rect(surface, (141, 80, 58), smallRect)
 
 @dataclass
 class Image(VisualComponent):
