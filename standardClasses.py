@@ -12,6 +12,9 @@ class ViewScreen(Enum):
     WorldMap = 1
     GachaScreen = 2
     Battle = 3
+    DiedScreen = 4
+    BattleClear = 5
+    YouWin = 6
 
 def myQuit():
     pygame.quit()
