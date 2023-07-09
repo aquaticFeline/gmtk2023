@@ -3,7 +3,7 @@ from collections.abc import Callable
 from VisualComponents import *
 from standardClasses import *
 from Animations import *
-import random
+import random, math
 #import VisualComponents
 
 oponent = None
@@ -11,13 +11,20 @@ inAnimation = False
 delayNextTurn = False
 doEnemyAttack = True
 
+class BossStats:
+    health = 100
+    damage = 10
+    width = 225
+    height = 450
+    upgradePoints = 8
+
 class BossSpawner():
     def spawn(self):
-        stateVars.oponent = Boss(25, 25, 300, 300)
+        stateVars.oponent = Boss(BossStats.damage - 10, BossStats.damage - 10, BossStats.health, BossStats.health)
         stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
         stateVars.enemyImage.image = pygame.image.load("assets\\bnuuy.png")
-        stateVars.enemyImage.width = 225
-        stateVars.enemyImage.height = 450
+        stateVars.enemyImage.width = BossStats.width
+        stateVars.enemyImage.height = BossStats.height
 
 textColor = (255,158,54) #orange
 #textColor = (193, 39, 34) #dark red
@@ -96,7 +103,7 @@ class CombatActor:
         stateVars.enemyImage.reloadImage()
         self.delete()
         stateVars.player.mana += 10
-        stateVars.player.money += 10
+        stateVars.player.money += 20
         stateVars.manaText2.text = "    +10 mana"
         stateVars.manaText2.start()
         stateVars.moneyText.text = "    +10 money"
@@ -294,6 +301,7 @@ class Player(CombatActor):
     def die(self):
         self.health = self.maxHealth
         self.money *= 0.5
+        self.money = math.floor(self.money)
         changeScreen(ViewScreen.DiedScreen)
         self.mana = 0
 
