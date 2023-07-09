@@ -59,7 +59,7 @@ def main():
     stateVars.frostImage = frostImage
     stateVars.shadowfallImage = shadowfallImage
 
-    punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
+    punchAttack = Attack(10.0, False, "Punch", "punch 'em in the face")
     punchAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
     addAnimationToAttack(punchAttack, punchAttackAnimation)
         
@@ -91,7 +91,7 @@ def main():
     shadowfallAttackAnimation = AppearAnimation(stateVars.shadowfallImage, 1025, 450, 0.4, None)
     addAnimationToAttack(shadowfallAttack, shadowfallAttackAnimation)
 
-    fireBallAttack = Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0)
+    fireBallAttack = Attack(10.0, True, "Fire Ball", "Shoots a fire ball", 20.0)
     fireBallAttackAnimation = FireAnimation(stateVars.fireBallImage, 400, 450, 0.4, 2500, 450, None)
     addAnimationToAttack(fireBallAttack, fireBallAttackAnimation)
 
@@ -105,7 +105,7 @@ def main():
     stateVars.shadowfallAttack = shadowfallAttack
     stateVars.fireBallAttack = fireBallAttack
 
-    player = Player(10, 10, 100, 100, money = 100, _mana = 20)
+    player = Player(100, 10, 100, 100, money = 100, _mana = 20)
     stateVars.player = player
     spawnEnemy()
 
@@ -128,8 +128,10 @@ def main():
     worldMapButton = Button(ViewScreen.Battle, 1200, 850, 300, 50, "Run From Battle", pygame.font.Font(size=28), lambda: changeScreen(ViewScreen.WorldMap))
     #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
+    BattleCompletionText = DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3")
+
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
-    worldMapButton = Button(ViewScreen.WorldMap, 1400, 50, 150, 50, "To Battle", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.Battle))
+    worldMapButton = Button(ViewScreen.WorldMap, 1425, 65, 150, 50, "To Battle", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.Battle))
     #returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     level0 = LevelButton(ViewScreen.WorldMap, 300, 300, Levels.Cemetery)
@@ -146,7 +148,7 @@ def main():
     GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
 
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
-    DynamicText(ViewScreen.WorldMap, 1400, 0, Font.large, lambda x: levelNames[stateVars.selectLevel])
+    DynamicText(ViewScreen.WorldMap, 1385, 15, Font.large, lambda x: levelNames[stateVars.selectLevel])
     
     punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
     addAnimationToAttack(punchAttack, punchAttackAnimation)
@@ -159,11 +161,17 @@ def main():
     stateVars.moneyText = FadingText(ViewScreen.Battle, 1050, 350, "    + dabloons", Font.large, (150, 150, 150), Icon.Coin, 0.5)
     #Button(ViewScreen.WorldMap, 0, 0, 250, 50, "Test", pygame.font.Font(size=32), lambda: testText.start())
 
-    Button(ViewScreen.WorldMap, 0, 0, 150, 50, "Test Die", Font.medium, lambda: changeScreen(ViewScreen.DiedScreen))
-    Button(ViewScreen.WorldMap, 0, 50, 150, 50, "Test Clear", Font.medium, lambda: changeScreen(ViewScreen.BattleClear))
-    Button(ViewScreen.WorldMap, 0, 100, 150, 50, "Test Win", Font.medium, lambda: changeScreen(ViewScreen.Win))
+    # Button(ViewScreen.WorldMap, 0, 0, 150, 50, "Test Die", Font.medium, lambda: changeScreen(ViewScreen.DiedScreen))
+    # Button(ViewScreen.WorldMap, 0, 50, 150, 50, "Test Clear", Font.medium, lambda: changeScreen(ViewScreen.BattleClear))
+    # Button(ViewScreen.WorldMap, 0, 100, 150, 50, "Test Win", Font.medium, lambda: changeScreen(ViewScreen.YouWin))
 
     Text(ViewScreen.DiedScreen, 650, 200, Font.large, None, "You Died")
+    Text(ViewScreen.BattleClear, 650, 200, Font.large, None, "Battle Cleared")
+    Text(ViewScreen.YouWin, 650, 200, Font.large, None, "You Win")
+
+    Button(ViewScreen.DiedScreen, 575, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
+    Button(ViewScreen.BattleClear, 600, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
+    Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
 
     regenPlayerText()
     #oponent.genText((400, 0))
