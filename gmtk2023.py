@@ -187,7 +187,7 @@ def main():
     GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
 
     levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows", Levels.Boss: "Bunny's Lair"}
-    DynamicText(ViewScreen.WorldMap, 1385, 15, Font.large, lambda x: levelNames[stateVars.selectLevel])
+    DynamicText(ViewScreen.WorldMap, 1300, 15, Font.large, lambda x: levelNames[stateVars.selectLevel])
     
     punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
     addAnimationToAttack(punchAttack, punchAttackAnimation)

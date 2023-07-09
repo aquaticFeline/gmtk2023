@@ -48,7 +48,6 @@ class EnemyType():
         stateVars.enemyImage.width = 225
         stateVars.enemyImage.height = 450
 
-
 levelEnemyTypes = {Levels.Cemetery : [EnemyType(5, 5, 50, 50, "Pumpkin", "assets\\pumpkin.png")], 
                     Levels.Woods : [EnemyType(10, 10, 75, 75, "Mushroom", "assets\\mysteryshroom.png")], 
                     Levels.Meadows : [EnemyType(15, 15, 100, 100, "Ranibow Sprimkle", "assets\\ranibowsprimkle.png")],
@@ -106,10 +105,23 @@ class CombatActor:
         stateVars.enemyImage.reloadImage()
         self.delete()
         stateVars.player.mana += 10
-        stateVars.player.money += 20
+        moneyMod = 0
+
+        if stateVars.selectLevel == Levels.Cemetery:
+            moneyMod = 20
+        if stateVars.selectLevel == Levels.Woods:
+            moneyMod = 30
+        if stateVars.selectLevel == Levels.Meadows:
+            moneyMod = 40
+        if stateVars.selectLevel == Levels.Boss:
+            moneyMod = 0
+            #you don't get extra money, only time to think about you killing that poor bunny
+
+        stateVars.player.money += moneyMod 
+
         stateVars.manaText2.text = "    +10 mana"
         stateVars.manaText2.start()
-        stateVars.moneyText.text = "    +10 money"
+        stateVars.moneyText.text =  "    +" + str(moneyMod) + " money"
         stateVars.moneyText.start()
         spawnEnemy()
         delayNextTurn = False
