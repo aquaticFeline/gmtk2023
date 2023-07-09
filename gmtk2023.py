@@ -134,6 +134,7 @@ def main():
     opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.physicalAttack(player))
 
     worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
+    worldMapButton = Button(ViewScreen.WorldMap, 15, 15, 250, 50, "<-- Back to tutorial", Font.medium, lambda: changeScreen(ViewScreen.Tutorial))
 
     initBattleButtons()
     #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
@@ -224,6 +225,8 @@ def main():
     Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
 
     Image(ViewScreen.CharacterCustomization, 0, 0, screen_width, screen_height, "assets\\cutscene.png") 
+
+    Text(ViewScreen.CharacterCustomization, 425, 25, pygame.font.Font(size=80), None, "Customize Your Character")
 
     DynamicText(ViewScreen.CharacterCustomization, 600, 100, Font.large, lambda x: f"Health: {BossStats.health}")
     DynamicText(ViewScreen.CharacterCustomization, 600, 150, Font.large, lambda x: f"Damage: {BossStats.damage}")
