@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from standardClasses import *
 from combat import *
 import time
 
@@ -136,21 +137,36 @@ class FadingText(VisualComponent, Animation):
     x: float
     y: float
     text: str
+    font: pygame.font.Font
+    color: tuple
+    icon: Icon
     speed: float
 
     def __post_init__(self):
-        super().__post_init__()
+        Animation.__post_init__(self)
+        VisualComponent.__post_init__(self)
         self.isAnimating = False
         
     def start(self):
         self.isAnimating = True
+        self.completion = 0
+        self.startTime = time.time()
         
     def update(self):
         if self.isAnimating:
             self.completion = (time.time() - self.startTime)*self.speed
+            if self.completion > 1.0:
+                self.isAnimating = False
 
     def draw(self, surface):
-        pass
+        if self.isAnimating:
+            myText = self.font.render(f"{self.text}", True, self.color)
+            myTextRect = myText.get_rect()
+            myTextRect = myTextRect.move(self.x, self.y-self.completion*100.0)
+            myText.set_alpha(255*(1-self.completion))
+            iconImg = pygame.transform.scale(stateVars.iconImages[self.icon], (self.font.get_linesize(), self.font.get_linesize()))
+            myText.blit(iconImg, iconImg.get_rect())
+            surface.blit(myText, myTextRect)
 
 
 

@@ -4,9 +4,9 @@ from collections.abc import Callable
 from gacha import *
 from VisualComponents import *
 from combat import *
+from Animations import *
 from standardClasses import *
 import stateVars
-from Animations import *
 
 player= None
 
@@ -150,6 +150,14 @@ def main():
     
     punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
     addAnimationToAttack(punchAttack, punchAttackAnimation)
+
+    stateVars.manaText = FadingText(ViewScreen.Battle, 50, 150, "    + mana", Font.large, (100, 150, 255), Icon.Mana, 0.5)
+    stateVars.manaText2 = FadingText(ViewScreen.Battle, 1050, 250, "    + mana", Font.large, (100, 150, 255), Icon.Mana, 0.5)
+    stateVars.damageText = FadingText(ViewScreen.Battle, 1050, 250, "    - health", Font.large, (255, 200, 50), Icon.Health, 0.5)
+    stateVars.damageText2 = FadingText(ViewScreen.Battle, 400, 275, "    - health", Font.large, (255, 200, 50), Icon.Health, 0.5)
+    stateVars.healthText = FadingText(ViewScreen.Battle, 50, 150, "     + health", Font.large, (255, 50, 50), Icon.Health, 0.5)
+    stateVars.moneyText = FadingText(ViewScreen.Battle, 1050, 350, "    + dabloons", Font.large, (150, 150, 150), Icon.Coin, 0.5)
+    #Button(ViewScreen.WorldMap, 0, 0, 250, 50, "Test", pygame.font.Font(size=32), lambda: testText.start())
 
     regenPlayerText()
     #oponent.genText((400, 0))

@@ -59,6 +59,8 @@ class CombatActor:
             visualComponents.remove(text)
         stateVars.player.mana += 10
         stateVars.player.money += 10
+        stateVars.manaText2.start()
+        stateVars.moneyText.start()
         spawnEnemy()
         delayNextTurn = False
         nextTurn(stateVars.player)
@@ -91,6 +93,7 @@ class Attack:
             source.magicalAttack(target, self.strength, self.manaCost)
         else:
             source.physicalAttack(target, self.strength)
+        stateVars.damageText.start()
         nextTurn(stateVars.player)
 
     def genText(self, position, useButton, viewScreen, elements):
@@ -118,6 +121,7 @@ def nextTurn(player):
     if not delayNextTurn:
         inAnimation = True
         stateVars.oponent.physicalAttack(player, 10)
+        stateVars.damageText2.start()
         player.mana += 10
         stateVars.oponent.mana += 10
         inAnimation = False
@@ -223,7 +227,9 @@ class UsePotion(Attack):
         if self.isMana:
             player.mana += 25
             player.manaPotions -= 1
+            stateVars.manaText.start()
         else:
             player.health += 50
             player.healPotions -= 1
+            stateVars.healthText.start()
         nextTurn(player)
