@@ -118,7 +118,7 @@ def main():
     stateVars.player = player
     spawnEnemy()
 
-    punchAttack = Attack(10.0, False, "Punch", "punch 'em in the face")
+    punchAttack = Attack(10.0, False, "Punch", "punch 'em in the face") 
 
     player.attacks.insert(0, Attack(0.0, False, "None", "None"))
     player.attacks.insert(0, Attack(0.0, False, "None", "None"))
@@ -156,10 +156,19 @@ def main():
     tutorialText6.color = (0,0,0) 
     tutorialText7 = Text(ViewScreen.Tutorial, 300, 310, Font.medium, None, "better. Some things you may expect to be rare may easily fall into your hands.Good luck on ")
     tutorialText7.color = (0,0,0)
+<<<<<<< HEAD
     tutorialText8 = Text(ViewScreen.Tutorial, 300, 345, Font.medium, None, "your travels!  You may also want to practice honing your skills in earlier levels. Be careful")
     tutorialText8.color = (0,0,0)
     tutorialText9 = Text(ViewScreen.Tutorial, 300, 380, Font.medium, None, "not to die! You will lose half your dabloons if you do!!!")
     tutorialText9.color = (0,0,0)
+=======
+    tutorialText8 = Text(ViewScreen.Tutorial, 300, 275, Font.medium, None, "Be careful not to die! You will lose half your dabloons (money) if you do!!! You can spend the ")
+    tutorialText8.color = (0,0,0)
+    tutorialText9 = Text(ViewScreen.Tutorial, 300, 300, Font.medium, None, "your dabloons at a certain cat on the world map... ")
+    tutorialText9.color = (0,0,0)
+    tutorialText10 = Text(ViewScreen.Tutorial, 300, 300, Font.medium, None, "Tip: It's important to balance your body and mind, keep at least one physical attack in your moveset. ")
+    tutorialText10.color = (0,0,0)
+>>>>>>> af21949112d1396a34251c50b4c6ef3240b77c64
     
     BattleCompletionText = DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3")
 
@@ -208,11 +217,18 @@ def main():
 
     Text(ViewScreen.DiedScreen, 650, 200, Font.large, None, "You Died")
     Text(ViewScreen.BattleClear, 650, 200, Font.large, None, "Battle Cleared")
-    Text(ViewScreen.YouWin, 650, 200, Font.large, None, "You Win")
+    Image(ViewScreen.YouWin, 0, 0, screen_width, screen_height, "assets\\cutscene.png")
+    Text(ViewScreen.YouWin, 650, 100, Font.large, None, "You Win")
+    Text(ViewScreen.YouWin, 300, 160, Font.medium, None, "The power of your magic (or your fists) has made the bunny come to their senses.")
+    Text(ViewScreen.YouWin,300, 185, Font.medium, None,  "They will enjoy the world for what it is.")
+    Text(ViewScreen.YouWin,300, 205, Font.medium, None,  "You can continue playing if desired. Congrats!")
+    Text(ViewScreen.YouWin, 400, 500, Font.medium, None,  "This adventure was brought to you by JARCraft and aquaticFeline")
 
     Button(ViewScreen.DiedScreen, 575, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
     Button(ViewScreen.BattleClear, 600, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
     Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
+
+    Image(ViewScreen.CharacterCustomization, 0, 0, screen_width, screen_height, "assets\\cutscene.png") 
 
     DynamicText(ViewScreen.CharacterCustomization, 600, 100, Font.large, lambda x: f"Health: {BossStats.health}")
     DynamicText(ViewScreen.CharacterCustomization, 600, 150, Font.large, lambda x: f"Damage: {BossStats.damage}")
