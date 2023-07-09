@@ -11,6 +11,9 @@ inAnimation = False
 delayNextTurn = False
 doEnemyAttack = True
 
+def initBattleButtons():
+    worldMapButton = DisableButton(ViewScreen.Battle, 1200, 850, 300, 50, "Run From Battle", pygame.font.Font(size=28), lambda: changeScreen(ViewScreen.WorldMap), lambda: inAnimation)
+
 class BossStats:
     health = 100
     damage = 10
@@ -115,7 +118,7 @@ class CombatActor:
         doEnemyAttack = True
         inAnimation = False
         stateVars.enemiesDefeated[stateVars.selectLevel.value] += 1
-        if stateVars.playerProgression >= stateVars.selectLevel.value and stateVars.enemiesDefeated[stateVars.selectLevel.value] >= 3:
+        if stateVars.playerProgression <= stateVars.selectLevel.value and stateVars.enemiesDefeated[stateVars.selectLevel.value] >= 3:
             stateVars.playerProgression += 1
             changeScreen(ViewScreen.BattleClear)
 
