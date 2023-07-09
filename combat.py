@@ -76,11 +76,14 @@ class CombatActor:
         delayNextTurn = True
         ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
 
+    def delete(self):
+        for text in self.texts:
+            visualComponents.remove(text)
+
     def doDeath(self):
         global inAnimation, delayNextTurn, doEnemyAttack
         stateVars.enemyImage.reloadImage()
-        for text in self.texts:
-            visualComponents.remove(text)
+        self.delete()
         stateVars.player.mana += 10
         stateVars.player.money += 10
         stateVars.manaText2.text = "    +10 mana"

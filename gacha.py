@@ -77,6 +77,7 @@ def genGacha(player):
         if rewardType == 15 or rewardType == 17:
             return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), player, stateVars.uncommonImager)
 
+        #return genAttackReward(random.choice([stateVars.plantShroudAttack]), player)
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)
 
     gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)

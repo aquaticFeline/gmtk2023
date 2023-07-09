@@ -153,6 +153,7 @@ def main():
 
     def beginBattle():
         player.mana = 0
+        stateVars.oponent.delete()
         spawnEnemy()
         changeScreen(ViewScreen.Battle)
 
