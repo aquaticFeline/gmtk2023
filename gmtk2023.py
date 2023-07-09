@@ -128,6 +128,12 @@ def main():
     worldMapButton = Button(ViewScreen.Battle, 1200, 850, 300, 50, "Run From Battle", pygame.font.Font(size=28), lambda: changeScreen(ViewScreen.WorldMap))
     #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
+    #Tutorial screen stuff
+    Image(ViewScreen.Tutorial, 0, 0, screen_width, screen_height, "assets\\tutorialbg.png")
+    returnTutorialButton = Button(ViewScreen.WorldMap, 0, 400, 100, 50, "Go to Tutorial", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Tutorial))
+    returnWorldMapButton = Button(ViewScreen.Tutorial, 0, 400, 100, 50, "Go to World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap)) 
+    tutorialText = genMultilineText("plink plink", ViewScreen.Tutorial, 300, 100, pygame.font.Font(size=32))
+    
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
     worldMapButton = Button(ViewScreen.WorldMap, 1400, 50, 150, 50, "To Battle", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.Battle))
     #returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
