@@ -156,19 +156,14 @@ def main():
     tutorialText6.color = (0,0,0) 
     tutorialText7 = Text(ViewScreen.Tutorial, 300, 310, Font.medium, None, "better. Some things you may expect to be rare may easily fall into your hands.Good luck on ")
     tutorialText7.color = (0,0,0)
-<<<<<<< HEAD
-    tutorialText8 = Text(ViewScreen.Tutorial, 300, 345, Font.medium, None, "your travels!  You may also want to practice honing your skills in earlier levels. Be careful")
+    tutorialText8 = Text(ViewScreen.Tutorial, 300, 345, Font.medium, None, "your travels!  You may also want to practice honing your skills in earlier levels. Be careful ")
     tutorialText8.color = (0,0,0)
-    tutorialText9 = Text(ViewScreen.Tutorial, 300, 380, Font.medium, None, "not to die! You will lose half your dabloons if you do!!!")
+    tutorialText9 = Text(ViewScreen.Tutorial, 300, 380, Font.medium, None, "not to die! You will lose half your dabloons (money) if you do!!! You can spend the your dabloons ")
     tutorialText9.color = (0,0,0)
-=======
-    tutorialText8 = Text(ViewScreen.Tutorial, 300, 275, Font.medium, None, "Be careful not to die! You will lose half your dabloons (money) if you do!!! You can spend the ")
-    tutorialText8.color = (0,0,0)
-    tutorialText9 = Text(ViewScreen.Tutorial, 300, 300, Font.medium, None, "your dabloons at a certain cat on the world map... ")
-    tutorialText9.color = (0,0,0)
-    tutorialText10 = Text(ViewScreen.Tutorial, 300, 300, Font.medium, None, "Tip: It's important to balance your body and mind, keep at least one physical attack in your moveset. ")
+    tutorialText10 = Text(ViewScreen.Tutorial, 300, 415, Font.medium, None, "at a certain cat on the world map... ")
     tutorialText10.color = (0,0,0)
->>>>>>> af21949112d1396a34251c50b4c6ef3240b77c64
+    tutorialText11 = Text(ViewScreen.Tutorial, 300, 450, Font.medium, None, "Tip: It's important to balance your body and mind, keep at least one physical attack in your moveset. ")
+    tutorialText11.color = (0,0,0)
     
     BattleCompletionText = DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3")
 
