@@ -132,9 +132,15 @@ def main():
     Image(ViewScreen.Tutorial, 0, 0, screen_width, screen_height, "assets\\tutorialbg.png")
     returnTutorialButton = Button(ViewScreen.WorldMap, 0, 400, 100, 50, "Go to Tutorial", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Tutorial))
     returnWorldMapButton = Button(ViewScreen.Tutorial, 0, 400, 100, 50, "Go to World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap)) 
-    tutorialText = genMultilineText("plink plink", ViewScreen.Tutorial, 300, 100, pygame.font.Font(size=32))
+    tutorialText1 = Text(ViewScreen.Tutorial, 300, 100, Font.medium, None, "Welcome to Furry Quest. You, a groundhog from this world, must embark on a journey through")
+    tutorialText1.color = (0,0,0)
+    tutorialText2 = Text(ViewScreen.Tutorial, 300, 125, Font.medium, None, "the cemetery, woods, and meadow to stop the bunny who breached dimensions and joined the ")
+    tutorialText2.color = (0,0,0)
+    tutorialText3 = Text(ViewScreen.Tutorial, 300, 150, Font.medium, None, "Evil Wizard Court. Before taking on enemies, you can gain buffs through the gacha, where ")
+    tutorialText3.color = (0,0,0)
+    tutorialText4 = Text(ViewScreen.Tutorial, 300, 175, Font.medium, None, "it seems your odds in this universe have turned for the better. Good luck on your travels! ")
+    tutorialText4.color = (0,0,0)  
     
-
     BattleCompletionText = DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3")
 
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
