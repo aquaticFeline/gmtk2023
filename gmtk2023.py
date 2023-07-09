@@ -155,7 +155,7 @@ def main():
     tutorialText5.color = (0,0,0)
     tutorialText6 = Text(ViewScreen.Tutorial, 300, 275, Font.medium, None, "buffs through the gacha, where it seems your odds in this universe have turned for the ")
     tutorialText6.color = (0,0,0) 
-    tutorialText7 = Text(ViewScreen.Tutorial, 300, 310, Font.medium, None, "better. Some things you may expect to be rare may easily fall into your hands.Good luck on ")
+    tutorialText7 = Text(ViewScreen.Tutorial, 300, 310, Font.medium, None, "better. Some things you may expect to be rare may easily fall into your hands. Good luck on ")
     tutorialText7.color = (0,0,0)
     tutorialText8 = Text(ViewScreen.Tutorial, 300, 345, Font.medium, None, "your travels!  You may also want to practice honing your skills in earlier levels. Be careful ")
     tutorialText8.color = (0,0,0)
