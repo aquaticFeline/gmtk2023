@@ -108,14 +108,15 @@ class CombatActor:
         moneyMod = 0
 
         if stateVars.selectLevel == Levels.Cemetery:
-            moneyMod = 20
+            moneyMod = 10
         if stateVars.selectLevel == Levels.Woods:
-            moneyMod = 30
+            moneyMod = 20
         if stateVars.selectLevel == Levels.Meadows:
-            moneyMod = 40
+            moneyMod = 30
         if stateVars.selectLevel == Levels.Boss:
             moneyMod = 0
             #you don't get extra money, only time to think about you killing that poor bunny
+            #i dont think killing the bunny runs this code, its got its own shiz
 
         stateVars.player.money += moneyMod 
 
