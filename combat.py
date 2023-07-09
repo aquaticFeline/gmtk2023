@@ -133,12 +133,21 @@ def nextTurn(player):
     if not delayNextTurn:
         inAnimation = True
         if doEnemyAttack:
-            stateVars.oponent.physicalAttack(player, 10)
-            stateVars.damageText2.text = f"    -{stateVars.oponent.physicalStrength+10} damage"
-            stateVars.damageText2.start()
-        player.mana += 10
-        stateVars.oponent.mana += 10
-        inAnimation = False
+            stateVars.enemyAnimation.start()
+
+        else:
+            finishEnemyAnimate()
+
+def finishEnemyAnimate():
+    global inAnimation
+    player = stateVars.player
+    if doEnemyAttack:
+        stateVars.oponent.physicalAttack(player, 10)
+        stateVars.damageText2.text = f"    -{stateVars.oponent.physicalStrength+10} damage"
+        stateVars.damageText2.start()
+    player.mana += 10
+    stateVars.oponent.mana += 10
+    inAnimation = False
 
 def spawnEnemy():
     stateVars.oponent = CombatActor(10, 10, 50, 50)
