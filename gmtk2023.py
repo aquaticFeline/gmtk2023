@@ -59,6 +59,8 @@ def main():
     stateVars.frostImage = frostImage
     stateVars.shadowfallImage = shadowfallImage
 
+    stateVars.enemyAnimation = MoveAnimation(enemyImage, 400, 275, 0.6, 1025, 275, 1.2, finishEnemyAnimate)
+
     punchAttack = Attack(10.0, False, "Punch", "punch 'em in the face")
     punchAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
     addAnimationToAttack(punchAttack, punchAttackAnimation)
