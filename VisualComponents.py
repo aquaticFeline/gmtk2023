@@ -13,10 +13,11 @@ class DynamicText(VisualComponent):
     getText: Callable[[VisualComponent], str]
 
     def __post_init__(self):
+        super().__post_init__()
         self.color = Color.white
 
     def draw(self, surface):
-        myText = self.font.render(f"{self.getText(self)}", True, color)
+        myText = self.font.render(f"{self.getText(self)}", True, self.color)
         myTextRect = myText.get_rect()
         myTextRect = myTextRect.move(self.x, self.y)
         surface.blit(myText, myTextRect)
