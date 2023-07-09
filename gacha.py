@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from collections.abc import Callable
+from combat import *
 from standardClasses import *
 from VisualComponents import *
-from combat import *
 import random
 
 # Gacha Rewards: 
