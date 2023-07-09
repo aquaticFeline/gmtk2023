@@ -8,6 +8,7 @@ from Animations import *
 oponent = None
 inAnimation = False
 delayNextTurn = False
+doEnemyAttack = True
 
 @dataclass
 class CombatActor:
@@ -53,7 +54,7 @@ class CombatActor:
         ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
 
     def doDeath(self):
-        global inAnimation, delayNextTurn
+        global inAnimation, delayNextTurn, doEnemyAttack
         stateVars.enemyImage.reloadImage()
         for text in self.texts:
             visualComponents.remove(text)
@@ -65,7 +66,9 @@ class CombatActor:
         stateVars.moneyText.start()
         spawnEnemy()
         delayNextTurn = False
+        doEnemyAttack = False
         nextTurn(stateVars.player)
+        doEnemyAttack = True
         inAnimation = False
         stateVars.enemiesDefeated[stateVars.selectLevel.value] += 1
         if stateVars.playerProgression >= stateVars.selectLevel.value and stateVars.enemiesDefeated[stateVars.selectLevel.value] >= 3:
@@ -129,9 +132,10 @@ def nextTurn(player):
     global inAnimation
     if not delayNextTurn:
         inAnimation = True
-        stateVars.oponent.physicalAttack(player, 10)
-        stateVars.damageText2.text = f"    -{stateVars.oponent.physicalStrength+10} damage"
-        stateVars.damageText2.start()
+        if doEnemyAttack:
+            stateVars.oponent.physicalAttack(player, 10)
+            stateVars.damageText2.text = f"    -{stateVars.oponent.physicalStrength+10} damage"
+            stateVars.damageText2.start()
         player.mana += 10
         stateVars.oponent.mana += 10
         inAnimation = False
