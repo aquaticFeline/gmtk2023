@@ -43,6 +43,7 @@ class Levels(Enum):
     Cemetery = 0
     Woods = 1
     Meadows = 2
+    Boss = 3
 
 @dataclass
 class VisualComponent:
@@ -87,3 +88,4 @@ def initIcons():
     }
     for icon in stateVars.iconImageFiles:
         stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon])
+

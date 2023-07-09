@@ -152,15 +152,23 @@ def main():
     
     BattleCompletionText = DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3")
 
+    def beginBattle():
+        player.mana = 0
+        spawnEnemy()
+        changeScreen(ViewScreen.Battle)
+
+
     worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
-    worldMapButton = Button(ViewScreen.WorldMap, 1425, 65, 150, 50, "To Battle", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.Battle))
+    worldMapButton = Button(ViewScreen.WorldMap, 1425, 65, 150, 50, "To Battle", pygame.font.Font(size=32), beginBattle)
     #returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     level0 = LevelButton(ViewScreen.WorldMap, 300, 300, Levels.Cemetery)
     level1 = LevelButton(ViewScreen.WorldMap, 700, 525, Levels.Woods)
     levelLine01 = Line(ViewScreen.WorldMap, 300, 300, 700, 525)
-    level2 = LevelButton(ViewScreen.WorldMap, 1250, 800, Levels.Meadows)
-    levelLine12 = Line(ViewScreen.WorldMap, 700, 525, 1250, 800)
+    level2 = LevelButton(ViewScreen.WorldMap, 1150, 700, Levels.Meadows)
+    levelLine12 = Line(ViewScreen.WorldMap, 700, 525, 1150, 700)
+    boss = LevelButton(ViewScreen.WorldMap, 1300, 800, Levels.Boss)
+    levelLine2b = Line(ViewScreen.WorldMap, 1150, 700, 1300, 800)
 
     playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-75*0.5, 300-150)
 
@@ -169,7 +177,7 @@ def main():
 
     GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
 
-    levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows"}
+    levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows", Levels.Boss: "Bunny's Liar"}
     DynamicText(ViewScreen.WorldMap, 1385, 15, Font.large, lambda x: levelNames[stateVars.selectLevel])
     
     punchAttackAnimation = MoveAnimation(playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
