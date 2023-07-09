@@ -75,7 +75,7 @@ def genGacha(player):
         if rewardType == 18 or rewardType == 19:
             return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(3, 7), player, stateVars.uncommonImage)
         if rewardType == 15 or rewardType == 17:
-            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), playe, stateVars.uncommonImager)
+            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), player, stateVars.uncommonImager)
 
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)
 

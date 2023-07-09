@@ -84,19 +84,19 @@ def main():
     addAnimationToAttack(waterBoltAttack, waterBoltAttackAnimation)
         
     plantShroudAttack = Attack(15.0, True, "Plant Shroud", "Circles the opponent in plants", 20.0)
-    plantShroudAttackAnimation = AppearAnimation(stateVars.plantShroudImage, 1025, 450, 0.4, 0, 0, None, None, None)
+    plantShroudAttackAnimation = AppearAnimation(stateVars.plantShroudImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle)
     addAnimationToAttack(plantShroudAttack, plantShroudAttackAnimation)
 
     enlightenmentAttack = Attack(20.0, True, "Enlightenment", "Light rains down on opponent", 30.0)
-    enlightenmentAttackAnimation = AppearAnimation(stateVars.enlightenmentImage, 1025, 450, 0.4, 0, 0, None, None, None)
+    enlightenmentAttackAnimation = AppearAnimation(stateVars.enlightenmentImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle)
     addAnimationToAttack(enlightenmentAttack, enlightenmentAttackAnimation)
 
     frostAttack = Attack(20.0, True, "Frost", "Chills opponent", 20.0)
-    frostAttackAnimation = AppearAnimation(stateVars.frostImage, 1025, 450, 0.4, 0, 0, None, None, None)
+    frostAttackAnimation = AppearAnimation(stateVars.frostImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle)
     addAnimationToAttack(frostAttack, frostAttackAnimation)
 
     shadowfallAttack = Attack(25.0, True, "Shadowfall", "Opponent glimpses the shadow realm, briefly", 20.0)
-    shadowfallAttackAnimation = AppearAnimation(stateVars.shadowfallImage, 1025, 450, 0.4, 0, 0, None, None, None)
+    shadowfallAttackAnimation = AppearAnimation(stateVars.shadowfallImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle) 
     addAnimationToAttack(shadowfallAttack, shadowfallAttackAnimation)
 
     fireBallAttack = Attack(10.0, True, "Fire Ball", "Shoots a fire ball", 20.0)
