@@ -114,14 +114,14 @@ def main():
     stateVars.shadowfallAttack = shadowfallAttack
     stateVars.fireBallAttack = fireBallAttack
 
-    player = Player(100, 10, 100, 100, money = 100, _mana = 20)
+    player = Player(10, 10, 100, 100, money = 0, _mana = 0)
     stateVars.player = player
     spawnEnemy()
 
-    punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
+    punchAttack = Attack(10.0, False, "Punch", "punch 'em in the face")
 
     player.attacks.insert(0, Attack(0.0, False, "None", "None"))
-    player.attacks.insert(0, fireBallAttack)
+    player.attacks.insert(0, Attack(0.0, False, "None", "None"))
     player.attacks.insert(0, punchAttack)
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)

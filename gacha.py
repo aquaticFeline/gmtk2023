@@ -65,17 +65,19 @@ def genGacha(player):
     def getReward():
         rewardType = random.randint(0, 19)
         if rewardType % 4 == 0:
+            if random.randint(0, 1) == 0:
+                currency = random.choice([("physicalStrength", "Physical Strength", Icon.PhysicalStrength), 
+                                            ("magicalStrength", "Magical Strength", Icon.MagicalStrength)])
+                return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(2, 6), player, stateVars.rareImage)
             currency = random.choice([("maxHealth", "Max Health", Icon.Health), 
-                                        ("maxMana", "Max Mana", Icon.Mana), 
-                                        ("physicalStrength", "Physical Strength", Icon.PhysicalStrength), 
-                                        ("magicalStrength", "Magical Strength", Icon.MagicalStrength)])
-            return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(1, 3), player, stateVars.rareImage)
+                                        ("maxMana", "Max Mana", Icon.Mana)])
+            return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(15, 40), player, stateVars.rareImage)
         if rewardType == 1:
             return genCurrencyReward("money", "Dabloons", Icon.Coin, random.randint(5, 10), player, stateVars.commonImage)
         if rewardType == 18 or rewardType == 19:
-            return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(3, 7), player, stateVars.uncommonImage)
+            return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(4, 8), player, stateVars.uncommonImage)
         if rewardType == 15 or rewardType == 17:
-            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), player, stateVars.uncommonImage)
+            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(4, 8), player, stateVars.uncommonImage)
 
         #return genAttackReward(random.choice([stateVars.plantShroudAttack]), player)
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)

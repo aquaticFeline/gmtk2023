@@ -11,6 +11,15 @@ inAnimation = False
 delayNextTurn = False
 doEnemyAttack = True
 
+class BossSpawner():
+    def spawn(self):
+        stateVars.oponent = Boss(25, 25, 300, 300)
+        stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
+        stateVars.enemyImage.image = pygame.image.load("assets\\bnuuy.png")
+        stateVars.enemyImage.width = 225
+        stateVars.enemyImage.height = 450
+
+
 @dataclass
 class EnemyType():
     physicalStrength: float
@@ -21,7 +30,7 @@ class EnemyType():
     imageFile: str
 
     def spawn(self):
-        stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxMana)
+        stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxHealth, self.maxMana, self.maxMana)
         stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
         stateVars.enemyImage.image = pygame.image.load(self.imageFile)
         stateVars.enemyImage.width = 225
@@ -29,9 +38,9 @@ class EnemyType():
 
 
 levelEnemyTypes = {Levels.Cemetery : [EnemyType(5, 5, 50, 50, "Pumpkin", "assets\\pumpkin.png")], 
-                    Levels.Woods : [EnemyType(10, 10, 75, 50, "Mushroom", "assets\\mysteryshroom.png")], 
-                    Levels.Meadows : [EnemyType(15, 15, 100, 50, "Ranibow Sprimkle", "assets\\ranibowsprimkle.png")],
-                    Levels.Boss : []}
+                    Levels.Woods : [EnemyType(10, 10, 75, 75, "Mushroom", "assets\\mysteryshroom.png")], 
+                    Levels.Meadows : [EnemyType(15, 15, 100, 100, "Ranibow Sprimkle", "assets\\ranibowsprimkle.png")],
+                    Levels.Boss : [BossSpawner()]}
 
 @dataclass
 class CombatActor:
@@ -108,6 +117,18 @@ class CombatActor:
         
         self.texts.append(createIcon(viewScreen, Icon.Health, position[0], position[1]+0*(Font.medium.get_linesize()), Font.medium))
         self.texts.append(createIcon(viewScreen, Icon.Mana, position[0], position[1]+1*(Font.medium.get_linesize()), Font.medium))
+
+
+@dataclass
+class Boss(CombatActor):
+    def die(self):
+        global visualComponents, delayNextTurn, inAnimation
+        delayNextTurn = True
+        changeScreen(ViewScreen.YouWin)
+        stateVars.enemyImage.reloadImage()
+        self.delete()
+        spawnEnemy()
+        inAnimation = False
 
 @dataclass
 class Attack:
@@ -198,7 +219,7 @@ class Player(CombatActor):
 
     def __post_init__(self):
         #super().__post_init__()
-        self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 25 health", player=self))
+        self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 50 health", player=self))
         self.attacks.append(UsePotion(0.0, False, "Mana Potion", "Grants 25 mana", isMana=True, player=self))
         self.elements = []
         self.buttons = []
@@ -278,5 +299,8 @@ class UsePotion(Attack):
         else:
             player.health += 50
             player.healPotions -= 1
+            stateVars.manaText2.text = "    +50 mana"
             stateVars.healthText.start()
         nextTurn(player)
+
+

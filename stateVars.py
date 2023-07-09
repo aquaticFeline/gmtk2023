@@ -4,7 +4,7 @@ selectLevel = None
 oponent = None
 player = None
 enemyImage = None
-playerProgression = 3
+playerProgression = 0
 enemiesDefeated = [0, 0, 0, 0]
 
 iconImages = {}
