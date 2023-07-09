@@ -54,7 +54,7 @@ def genSwapButtons(player, attack):
     swapping = True
     for i in range(len(player.attacks)-2):
         _genSwapButton(player, attack, i)
-    swapButons.append(Button(ViewScreen.GachaScreen, 1300, 55, 250, 45, "Discard", Font.large, lambda: clearButtons()))
+    swapButons.append(Button(ViewScreen.GachaScreen, 750, 530, 100, 45, "Discard", Font.medium, lambda: clearButtons()))
 
 @dataclass
 class Reward():

@@ -246,7 +246,7 @@ class Player(CombatActor):
 
     def __post_init__(self):
         #super().__post_init__()
-        self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 50 health", player=self))
+        self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 75 health", player=self))
         self.attacks.append(UsePotion(0.0, False, "Mana Potion", "Grants 25 mana", isMana=True, player=self))
         self.elements = []
         self.buttons = []
@@ -332,12 +332,12 @@ class UsePotion(Attack):
         if self.isMana:
             player.mana += 25
             player.manaPotions -= 1
-            stateVars.manaText2.text = "    +25 mana"
+            stateVars.manaText.text = "    +25 mana"
             stateVars.manaText.start()
         else:
-            player.health += 50
+            player.health += 75
             player.healPotions -= 1
-            stateVars.manaText2.text = "    +50 mana"
+            stateVars.healthText.text = "    +75 health"
             stateVars.healthText.start()
         nextTurn(player)
 
