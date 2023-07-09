@@ -3,12 +3,35 @@ from collections.abc import Callable
 from VisualComponents import *
 from standardClasses import *
 from Animations import *
+import random
 #import VisualComponents
 
 oponent = None
 inAnimation = False
 delayNextTurn = False
 doEnemyAttack = True
+
+@dataclass
+class EnemyType():
+    physicalStrength: float
+    magicalStrength: float
+    maxHealth: float
+    maxMana: float
+    name: str
+    imageFile: str
+
+    def spawn(self):
+        stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxMana)
+        stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
+        stateVars.enemyImage.image = pygame.image.load(self.imageFile)
+        stateVars.enemyImage.width = 225
+        stateVars.enemyImage.height = 450
+
+
+levelEnemyTypes = {Levels.Cemetery : [EnemyType(5, 5, 50, 50, "Pumpkin", "assets\\pumpkin.png")], 
+                    Levels.Woods : [EnemyType(10, 10, 75, 50, "Mushroom", "assets\\mysteryshroom.png")], 
+                    Levels.Meadows : [EnemyType(15, 15, 100, 50, "Ranibow Sprimkle", "assets\\ranibowsprimkle.png")],
+                    Levels.Boss : []}
 
 @dataclass
 class CombatActor:
@@ -150,7 +173,7 @@ def finishEnemyAnimate():
     inAnimation = False
 
 def spawnEnemy():
-    EnemyType(10, 10, 50, 50, "", "").spawn()
+    random.choice(levelEnemyTypes[stateVars.selectLevel]).spawn()
 
 def regenPlayerText():
     for element in stateVars.player.elements:
@@ -254,18 +277,3 @@ class UsePotion(Attack):
             player.healPotions -= 1
             stateVars.healthText.start()
         nextTurn(player)
-
-@dataclass
-class EnemyType():
-    physicalStrength: float
-    magicalStrength: float
-    maxHealth: float
-    maxMana: float
-    name: str
-    imageFile: str
-
-    def spawn(self):
-        stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxMana)
-        stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
-        stateVars.enemyImage.width = 225
-        stateVars.enemyImage.height = 450

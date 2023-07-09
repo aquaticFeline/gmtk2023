@@ -206,7 +206,7 @@ class Image(VisualComponent):
         imageRect = imageRect.move(self.x, self.y)
         surface.blit(self.image, imageRect)
 
-levelImageFiles = {Levels.Cemetery : "assets\\cemetery_map.png", Levels.Woods : "assets\\forest_map.png", Levels.Meadows : "assets\\meadow_map.png"}
+levelImageFiles = {Levels.Cemetery : "assets\\cemetery_map.png", Levels.Woods : "assets\\forest_map.png", Levels.Meadows : "assets\\meadow_map.png", Levels.Boss : "assets\\meadow_map.png"}
 
 @dataclass
 class BattleBkgrdImage(VisualComponent):
