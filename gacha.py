@@ -71,7 +71,7 @@ def genGacha(player):
                                         ("magicalStrength", "Magical Strength", Icon.MagicalStrength)])
             return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(1, 3), player)
         if rewardType == 1:
-            return genCurrencyReward("money", "Dablo0ons", Icon.Coin, random.randint(5, 10), player)
+            return genCurrencyReward("money", "Dabloons", Icon.Coin, random.randint(5, 10), player)
         if rewardType == 18 or rewardType == 19:
             return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(3, 7), player)
         if rewardType == 15 or rewardType == 17:

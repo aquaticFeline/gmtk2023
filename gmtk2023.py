@@ -44,8 +44,20 @@ def main():
 
     playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
+    fireBallImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\fireball.png")
+    waterBoltImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\waterbolt.png")
+    enlightenmentImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\enlightenment.png")
+    plantShroudImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\plantshroud.png")
+    frostImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\frost.png")
+    shadowfallImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\shadowfall.png")
     stateVars.enemyImage = enemyImage
     stateVars.playerImage = playerImage
+    stateVars.fireBallImage = fireBallImage
+    stateVars.waterBoltImage = waterBoltImage
+    stateVars.enlightenmentImage = enlightenmentImage
+    stateVars.plantShroudImage = plantShroudImage
+    stateVars.frostImage = frostImage
+    stateVars.shadowfallImage = shadowfallImage
 
     punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
     punchAttackAnimation = MoveAnimation(stateVars.playerImage, 1025, 275, 0.4, 400, 275, 0.8, None)
@@ -60,16 +72,28 @@ def main():
     addAnimationToAttack(bonkAttack, bonkAttackAnimation)
 
     waterBoltAttack = Attack(10.0, True, "Water Bolt", "Shoots a bolt of water", 15.0)
+    waterBoltAttackAnimation = FireAnimation(stateVars.waterBoltImage, 400, 450, 0.4, 2500, 450, None)
+    addAnimationToAttack(waterBoltAttack, waterBoltAttackAnimation)
         
     plantShroudAttack = Attack(15.0, True, "Plant Shroud", "Circles the opponent in plants", 20.0)
+    plantShroudAttackAnimation = AppearAnimation(stateVars.plantShroudImage, 1025, 450, 0.4, None)
+    addAnimationToAttack(plantShroudAttack, plantShroudAttackAnimation)
 
     enlightenmentAttack = Attack(20.0, True, "Enlightenment", "Light rains down on opponent", 30.0)
+    enlightenmentAttackAnimation = AppearAnimation(stateVars.enlightenmentImage, 1025, 450, 0.4, None)
+    addAnimationToAttack(enlightenmentAttack, enlightenmentAttackAnimation)
 
     frostAttack = Attack(20.0, True, "Frost", "Chills opponent", 20.0)
+    frostAttackAnimation = AppearAnimation(stateVars.frostImage, 1025, 450, 0.4, None)
+    addAnimationToAttack(frostAttack, frostAttackAnimation)
 
     shadowfallAttack = Attack(25.0, True, "Shadowfall", "Opponent glimpses the shadow realm, briefly", 20.0)
+    shadowfallAttackAnimation = AppearAnimation(stateVars.shadowfallImage, 1025, 450, 0.4, None)
+    addAnimationToAttack(shadowfallAttack, shadowfallAttackAnimation)
 
     fireBallAttack = Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0)
+    fireBallAttackAnimation = FireAnimation(stateVars.fireBallImage, 400, 450, 0.4, 2500, 450, None)
+    addAnimationToAttack(fireBallAttack, fireBallAttackAnimation)
 
     stateVars.punchAttack = punchAttack
     stateVars.shredAttack = shredAttack
@@ -88,7 +112,7 @@ def main():
     punchAttack = Attack(10.0, False, "Punch", "punch 'em \nin the face")
 
     player.attacks.insert(0, Attack(0.0, False, "None", "None"))
-    player.attacks.insert(0, Attack(10.0, True, "Fire Ball", "Shoots a \nfire ball", 20.0))
+    player.attacks.insert(0, fireBallAttack)
     player.attacks.insert(0, punchAttack)
 
     quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)

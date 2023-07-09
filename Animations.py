@@ -76,6 +76,63 @@ class ShrinkAnimation(Animation):
                 self.actor.height = self.startY*(1-completion)
 
 @dataclass
+class FireAnimation(Animation):
+    actor: Image
+    toX: float
+    toY: float
+    speed: float
+    toX2: float
+    toY2: float
+    onEnd: Callable[[], None]
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.isAnimating = False
+
+    def start(self):
+        self.startTime = time.time()
+        self.isAnimating = True
+        self.startX = self.actor.width
+        self.startY = self.actor.height
+    
+    def update(self):
+        if self.isAnimating:
+            completion = (time.time() - self.startTime)*self.speed
+            if completion > 1.0:
+                self.isAnimating = False
+                self.onEnd()
+            else:
+                self.actor.x = self.toX2*completion + self.toX*(1-completion)
+                self.actor.y = self.toY2*completion + self.toY*(1-completion)
+
+#todo because this does not make images appear nor disappear 
+@dataclass
+class AppearAnimation(Animation):
+    actor: Image
+    xcoord: float
+    ycoord: float
+    speed: float
+    onEnd: Callable[[], None]
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.isAnimating = False
+
+    def start(self):
+        self.startTime = time.time()
+        self.isAnimating = True
+        self.startX = self.actor.width
+        self.startY = self.actor.height
+    
+    def update(self):
+        if self.isAnimating:
+            completion = (time.time() - self.startTime)*self.speed
+            if completion > 1.0:
+                self.isAnimating = False
+                self.onEnd()
+
+
+@dataclass
 class FadingText(VisualComponent, Animation):
     x: float
     y: float
