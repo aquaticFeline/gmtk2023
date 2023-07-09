@@ -12,8 +12,11 @@ class DynamicText(VisualComponent):
     font: pygame.font.Font
     getText: Callable[[VisualComponent], str]
 
+    def __post_init__(self):
+        self.color = Color.white
+
     def draw(self, surface):
-        myText = self.font.render(f"{self.getText(self)}", True, Color.white)
+        myText = self.font.render(f"{self.getText(self)}", True, color)
         myTextRect = myText.get_rect()
         myTextRect = myTextRect.move(self.x, self.y)
         surface.blit(myText, myTextRect)
@@ -128,14 +131,14 @@ class LevelButton(VisualComponent):
 
     def draw(self, surface):
         mouse = pygame.mouse.get_pos()
-        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
-            pygame.draw.circle(surface, Color.white, (self.x, self.y), self.radius+5)
+        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius and stateVars.playerProgression >= self.level.value:
+            pygame.draw.circle(surface, Color.white if stateVars.playerProgression >= self.level.value else Color.gray, (self.x, self.y), self.radius+5)
             pygame.draw.circle(surface, Color.black, (self.x, self.y), self.radius+2.5)
-        pygame.draw.circle(surface, Color.white, (self.x, self.y), self.radius)
+        pygame.draw.circle(surface, Color.white if stateVars.playerProgression >= self.level.value else Color.gray, (self.x, self.y), self.radius)
 
     def checkAction(self, playerWorldMap):
         mouse = pygame.mouse.get_pos()
-        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius:
+        if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius and stateVars.playerProgression >= self.level.value:
             playerWorldMap.x = self.x - 75*0.5
             playerWorldMap.y = self.y - 150
             stateVars.selectLevel = self.level

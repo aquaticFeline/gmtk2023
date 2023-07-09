@@ -59,12 +59,18 @@ class CombatActor:
             visualComponents.remove(text)
         stateVars.player.mana += 10
         stateVars.player.money += 10
+        stateVars.manaText2.text = "    +10 mana"
         stateVars.manaText2.start()
+        stateVars.moneyText.text = "    +10 money"
         stateVars.moneyText.start()
         spawnEnemy()
         delayNextTurn = False
         nextTurn(stateVars.player)
         inAnimation = False
+        stateVars.enemiesDefeated[stateVars.selectLevel.value] += 1
+        if stateVars.playerProgression >= stateVars.selectLevel.value and stateVars.enemiesDefeated[stateVars.selectLevel.value] >= 3:
+            stateVars.playerProgression += 1
+            changeScreen(ViewScreen.BattleClear)
 
     def genText(self, position, viewScreen):
         self.texts = []
@@ -91,8 +97,11 @@ class Attack:
     def _attack(self, source, target):
         if self.isMagic:
             source.magicalAttack(target, self.strength, self.manaCost)
+            stateVars.damageText.text = f"    -{source.magicalStrength+self.strength} damage"
         else:
             source.physicalAttack(target, self.strength)
+            stateVars.damageText.text = f"    -{source.physicalStrength+self.strength} damage"
+            
         stateVars.damageText.start()
         nextTurn(stateVars.player)
 
@@ -121,6 +130,7 @@ def nextTurn(player):
     if not delayNextTurn:
         inAnimation = True
         stateVars.oponent.physicalAttack(player, 10)
+        stateVars.damageText2.text = f"    -{stateVars.oponent.physicalStrength+10} damage"
         stateVars.damageText2.start()
         player.mana += 10
         stateVars.oponent.mana += 10
@@ -212,7 +222,7 @@ class Player(CombatActor):
     def die(self):
         self.health = self.maxHealth
         self.money = 0
-        changeScreen(ViewScreen.WorldMap)
+        changeScreen(ViewScreen.DiedScreen)
         self.mana = 0
 
 @dataclass
@@ -227,6 +237,7 @@ class UsePotion(Attack):
         if self.isMana:
             player.mana += 25
             player.manaPotions -= 1
+            stateVars.manaText2.text = "    +25 mana"
             stateVars.manaText.start()
         else:
             player.health += 50
