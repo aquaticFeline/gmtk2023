@@ -8,7 +8,7 @@ a = Analysis(
     ['gmtk2023.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('.\\assets', '.\\assets')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

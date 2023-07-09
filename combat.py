@@ -293,7 +293,7 @@ class Player(CombatActor):
     
     def die(self):
         self.health = self.maxHealth
-        self.money = 0
+        self.money *= 0.5
         changeScreen(ViewScreen.DiedScreen)
         self.mana = 0
 
