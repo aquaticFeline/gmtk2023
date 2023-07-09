@@ -83,6 +83,7 @@ def genGacha(player):
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)
 
     gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)
+    returnTestButton = DisableButton(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.WorldMap), lambda: swapping or gachaAnimation.animationPlaying)
 
 def genAttackReward(attack, player):
     attackElements = []

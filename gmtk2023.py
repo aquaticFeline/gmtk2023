@@ -30,7 +30,7 @@ def main():
     pygame.init()
     initFonts()
     initIcons()
-    stateVars.viewScreen = ViewScreen.Tutorial
+    stateVars.viewScreen = ViewScreen.CharacterCustomization
     stateVars.selectLevel = Levels.Cemetery
     pygame.display.set_caption("Furry Quest")
 
@@ -134,7 +134,8 @@ def main():
     opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.physicalAttack(player))
 
     worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
-    worldMapButton = Button(ViewScreen.Battle, 1200, 850, 300, 50, "Run From Battle", pygame.font.Font(size=28), lambda: changeScreen(ViewScreen.WorldMap))
+
+    initBattleButtons()
     #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
 
     #Tutorial screen stuff
@@ -182,7 +183,6 @@ def main():
     playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-75*0.5, 300-150)
 
     worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
-    returnTestButton = Button(ViewScreen.GachaScreen, 1300, 0, 250, 50, "Return To World Map", pygame.font.Font(size=32), lambda: changeScreen(ViewScreen.WorldMap))
 
     GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen))
 
@@ -212,6 +212,47 @@ def main():
     Button(ViewScreen.BattleClear, 600, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
     Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
 
+    DynamicText(ViewScreen.CharacterCustomization, 600, 100, Font.large, lambda x: f"Health: {BossStats.health}")
+    DynamicText(ViewScreen.CharacterCustomization, 600, 150, Font.large, lambda x: f"Damage: {BossStats.damage}")
+    DynamicText(ViewScreen.CharacterCustomization, 600, 200, Font.large, lambda x: f"Width: {BossStats.width}")
+    DynamicText(ViewScreen.CharacterCustomization, 600, 250, Font.large, lambda x: f"Height: {BossStats.height}")
+    DynamicText(ViewScreen.CharacterCustomization, 600, 300, Font.large, lambda x: f"Upgrade Points: {BossStats.upgradePoints}")
+
+    def decreaseHealth():
+        BossStats.health -= 50
+        BossStats.upgradePoints += 1
+    def increaseHealth():
+        BossStats.health += 50
+        BossStats.upgradePoints -= 1
+    def decreaseDamage():
+        BossStats.damage -= 5
+        BossStats.upgradePoints += 1
+    def increaseDamage():
+        BossStats.damage += 5
+        BossStats.upgradePoints -= 1
+    def decreaseWidth():
+        BossStats.width -= 25
+    def increaseWidth():
+        BossStats.width += 25
+    def decreaseHeight():
+        BossStats.height -= 25
+    def increaseHeight():
+        BossStats.height += 25
+
+
+    DisableButton(ViewScreen.CharacterCustomization, 450, 100, 135, 40, "Decrease", Font.medium, decreaseHealth, lambda: BossStats.health <= 100)
+    DisableButton(ViewScreen.CharacterCustomization, 1000, 100, 135, 40, "Increase", Font.medium, increaseHealth, lambda: BossStats.upgradePoints <= 0)
+    DisableButton(ViewScreen.CharacterCustomization, 450, 150, 135, 40, "Decrease", Font.medium, decreaseDamage, lambda: BossStats.damage <= 10)
+    DisableButton(ViewScreen.CharacterCustomization, 1000, 150, 135, 40, "Increase", Font.medium, increaseDamage, lambda: BossStats.upgradePoints <= 0)
+    DisableButton(ViewScreen.CharacterCustomization, 450, 200, 135, 40, "Decrease", Font.medium, decreaseWidth, lambda: BossStats.width <= 125)
+    DisableButton(ViewScreen.CharacterCustomization, 1000, 200, 135, 40, "Increase", Font.medium, increaseWidth, lambda: BossStats.width >= 325)
+    DisableButton(ViewScreen.CharacterCustomization, 450, 250, 135, 40, "Decrease", Font.medium, decreaseHeight, lambda: BossStats.height <= 300)
+    DisableButton(ViewScreen.CharacterCustomization, 1000, 250, 135, 40, "Increase", Font.medium, increaseHeight, lambda: BossStats.height >= 600)
+
+    DisableButton(ViewScreen.CharacterCustomization, 700, 350, 175, 40, "Begin Game", Font.medium, lambda: changeScreen(ViewScreen.Tutorial), lambda: BossStats.upgradePoints > 0)
+
+    charcterCustomImage = pygame.image.load("assets\\bnuuy.png")
+
     regenPlayerText()
     #oponent.genText((400, 0))
 
@@ -235,6 +276,12 @@ def main():
             animation.update()
 
         screen.blit(viewSurfaces[stateVars.viewScreen], screen_rect)
+
+        if stateVars.viewScreen == ViewScreen.CharacterCustomization:
+            charcterCustomImageTemp = pygame.transform.scale(charcterCustomImage, (BossStats.width, BossStats.height))
+            charcterCustomImageRect = charcterCustomImageTemp.get_rect()
+            charcterCustomImageRect = charcterCustomImageRect.move(500, 400)
+            screen.blit(charcterCustomImageTemp, charcterCustomImageRect)
 
         pygame.display.flip()
 
