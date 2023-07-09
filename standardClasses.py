@@ -15,6 +15,8 @@ class ViewScreen(Enum):
     DiedScreen = 4
     BattleClear = 5
     YouWin = 6
+    CharacterCustomization = 7
+    Tutorial = 8
 
 def myQuit():
     pygame.quit()
