@@ -30,14 +30,15 @@ def main():
     pygame.init()
     initFonts()
     initIcons()
-    stateVars.viewScreen = ViewScreen.WorldMap
+    stateVars.viewScreen = ViewScreen.Tutorial
     stateVars.selectLevel = Levels.Cemetery
+    pygame.display.set_caption("Furry Quest")
 
     screen_size = screen_width, screen_height = (1600, 900)
     screen = pygame.display.set_mode(screen_size)
     screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
 
-    Image(ViewScreen.WorldMap, 0, 0, screen_width, screen_height, "assets\worldmap.png")
+    Image(ViewScreen.WorldMap, 0, 0, screen_width, screen_height, "assets\\worldmap.png")
     BattleBkgrdImage(ViewScreen.Battle, 0, 0, screen_width, screen_height)
     
     randomNumber = random.randint(0, 10)
@@ -137,8 +138,8 @@ def main():
 
     #Tutorial screen stuff
     Image(ViewScreen.Tutorial, 0, 0, screen_width, screen_height, "assets\\tutorialbg.png")
-    returnTutorialButton = Button(ViewScreen.WorldMap, 0, 400, 100, 50, "Go to Tutorial", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Tutorial))
-    returnWorldMapButton = Button(ViewScreen.Tutorial, 0, 400, 100, 50, "Go to World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap)) 
+    #returnTutorialButton = Button(ViewScreen.WorldMap, 0, 400, 100, 50, "Go to Tutorial", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Tutorial))
+    returnWorldMapButton = Button(ViewScreen.Tutorial, 700, 650, 250, 50, "Go to World Map", pygame.font.Font(size=35), lambda: changeScreen(ViewScreen.WorldMap)) 
     tutorialText1 = Text(ViewScreen.Tutorial, 300, 100, Font.medium, None, "Welcome to Furry Quest. You, a groundhog from this world, must embark on a journey through")
     tutorialText1.color = (0,0,0)
     tutorialText2 = Text(ViewScreen.Tutorial, 300, 125, Font.medium, None, "the cemetery, woods, and meadow to stop the bunny who breached dimensions and joined the ")

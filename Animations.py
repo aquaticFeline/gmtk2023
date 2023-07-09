@@ -116,7 +116,6 @@ class AppearAnimation(Animation):
     speed: float
     onEnd: Callable[[], None]
     viewScreen: ViewScreen
-    imageFile: Image
 
     def __post_init__(self):
         super().__post_init__()
@@ -127,14 +126,15 @@ class AppearAnimation(Animation):
         self.isAnimating = True
         self.startX = self.actor.width
         self.startY = self.actor.height
-        self.image = Image(self.viewScreen, self.xcoord, self.ycoord, self.width, self.height, self.imageFile)
+        #self.image = Image(self.viewScreen, self.xcoord, self.ycoord, self.width, self.height, self.imageFile)
+        self.actor.viewScreen = self.viewScreen
     
     def update(self):
         if self.isAnimating:
             completion = (time.time() - self.startTime)*self.speed
             if completion > 1.0:
                 self.isAnimating = False
-                visualComponents.remove(self.image)
+                self.actor.viewScreen = self.Test
                 self.onEnd()
 
 

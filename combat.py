@@ -150,10 +150,7 @@ def finishEnemyAnimate():
     inAnimation = False
 
 def spawnEnemy():
-    stateVars.oponent = CombatActor(10, 10, 50, 50)
-    stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
-    stateVars.enemyImage.width = 225
-    stateVars.enemyImage.height = 450
+    EnemyType(10, 10, 50, 50, "", "").spawn()
 
 def regenPlayerText():
     for element in stateVars.player.elements:
@@ -257,3 +254,18 @@ class UsePotion(Attack):
             player.healPotions -= 1
             stateVars.healthText.start()
         nextTurn(player)
+
+@dataclass
+class EnemyType():
+    physicalStrength: float
+    magicalStrength: float
+    maxHealth: float
+    maxMana: float
+    name: str
+    imageFile: str
+
+    def spawn(self):
+        stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxMana)
+        stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
+        stateVars.enemyImage.width = 225
+        stateVars.enemyImage.height = 450
