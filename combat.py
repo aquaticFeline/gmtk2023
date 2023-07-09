@@ -19,6 +19,8 @@ class BossSpawner():
         stateVars.enemyImage.width = 225
         stateVars.enemyImage.height = 450
 
+textColor = (255,158,54) #orange
+#textColor = (193, 39, 34) #dark red
 
 @dataclass
 class EnemyType():
@@ -112,9 +114,12 @@ class CombatActor:
 
     def genText(self, position, viewScreen):
         self.texts = []
-        self.texts.append(DynamicText(viewScreen, position[0], position[1], Font.medium, lambda x: f"    Health: {self.health}/{self.maxHealth}"))
-        self.texts.append(DynamicText(viewScreen, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"    Mana: {self.mana}/{self.maxMana}"))
-        
+        healthText = DynamicText(viewScreen, position[0], position[1], Font.medium, lambda x: f"    Health: {self.health}/{self.maxHealth}")
+        healthText.color = textColor
+        self.texts.append(healthText)
+        manaText = DynamicText(viewScreen, position[0], position[1]+Font.medium.get_linesize(), Font.medium, lambda x: f"    Mana: {self.mana}/{self.maxMana}")
+        manaText.color = textColor
+        self.texts.append(manaText)
         self.texts.append(createIcon(viewScreen, Icon.Health, position[0], position[1]+0*(Font.medium.get_linesize()), Font.medium))
         self.texts.append(createIcon(viewScreen, Icon.Mana, position[0], position[1]+1*(Font.medium.get_linesize()), Font.medium))
 
@@ -243,11 +248,21 @@ class Player(CombatActor):
 
     def genText(self, position, opponent, viewScreen, isUseButton):
         super().genText(position, viewScreen)
-        self.elements.append(DynamicText(viewScreen, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Physical Strength: {self.physicalStrength}"))
-        self.elements.append(DynamicText(viewScreen, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Magical Strength: {self.magicalStrength}"))
-        self.elements.append(DynamicText(viewScreen, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Healing Potions: {self.healPotions}"))
-        self.elements.append(DynamicText(viewScreen, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Mana Potions: {self.manaPotions}"))
-        self.elements.append(DynamicText(viewScreen, position[0], position[1]+6*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Dabloons: {self.money}"))
+        physStrengthText = DynamicText(viewScreen, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Physical Strength: {self.physicalStrength}")
+        physStrengthText.color = textColor
+        self.elements.append(physStrengthText)
+        magStrengthText = DynamicText(viewScreen, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Magical Strength: {self.magicalStrength}")
+        magStrengthText.color = textColor
+        self.elements.append(magStrengthText)
+        healPotText = DynamicText(viewScreen, position[0], position[1]+4*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Healing Potions: {self.healPotions}")
+        healPotText.color = textColor
+        self.elements.append(healPotText)
+        manaPotText = DynamicText(viewScreen, position[0], position[1]+5*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Mana Potions: {self.manaPotions}")
+        manaPotText.color = textColor
+        self.elements.append(manaPotText)
+        dabloonText = DynamicText(viewScreen, position[0], position[1]+6*(Font.medium.get_linesize()), Font.medium, lambda x: f"    Dabloons: {self.money}")
+        dabloonText.color = textColor
+        self.elements.append(dabloonText)
 
         self.elements.append(createIcon(viewScreen, Icon.PhysicalStrength, position[0], position[1]+2*(Font.medium.get_linesize()), Font.medium))
         self.elements.append(createIcon(viewScreen, Icon.MagicalStrength, position[0], position[1]+3*(Font.medium.get_linesize()), Font.medium))
