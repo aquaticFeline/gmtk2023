@@ -135,7 +135,12 @@ class AppearAnimation(Animation):
             if completion > 1.0:
                 self.isAnimating = False
                 self.actor.viewScreen = self.Test
+                self.actor.y = self.ycoord + 1200
                 self.onEnd()
+            else:
+                self.actor.x = self.xcoord + .005
+                self.actor.y = self.ycoord + .005
+                completion -= completion
 
 
 @dataclass

@@ -87,7 +87,8 @@ def main():
     plantShroudAttackAnimation = AppearAnimation(stateVars.plantShroudImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle)
     addAnimationToAttack(plantShroudAttack, plantShroudAttackAnimation)
 
-    enlightenmentAttack = Attack(20.0, True, "Enlightenment", "Light rains down on opponent", 30.0)
+    #shortened to enlighten when displayed
+    enlightenmentAttack = Attack(20.0, True, "Enlighten", "Light rains down on opponent", 30.0)
     enlightenmentAttackAnimation = AppearAnimation(stateVars.enlightenmentImage, 1025, 450, 0.4, 0, 0, None, ViewScreen.Battle)
     addAnimationToAttack(enlightenmentAttack, enlightenmentAttackAnimation)
 
