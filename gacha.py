@@ -69,13 +69,13 @@ def genGacha(player):
                                         ("maxMana", "Max Mana", Icon.Mana), 
                                         ("physicalStrength", "Physical Strength", Icon.PhysicalStrength), 
                                         ("magicalStrength", "Magical Strength", Icon.MagicalStrength)])
-            return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(1, 3), player)
+            return genCurrencyReward(currency[0], currency[1], currency[2], random.randint(1, 3), player, stateVars.rareImage)
         if rewardType == 1:
-            return genCurrencyReward("money", "Dabloons", Icon.Coin, random.randint(5, 10), player)
+            return genCurrencyReward("money", "Dabloons", Icon.Coin, random.randint(5, 10), player, stateVars.commonImage)
         if rewardType == 18 or rewardType == 19:
-            return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(3, 7), player)
+            return genCurrencyReward("healPotions", "Healing Potions", Icon.HealPotion, random.randint(3, 7), player, stateVars.uncommonImage)
         if rewardType == 15 or rewardType == 17:
-            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), player)
+            return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(3, 7), playe, stateVars.uncommonImager)
 
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)
 
@@ -95,9 +95,13 @@ def genAttackReward(attack, player):
         surface.blit(myText, myTextRect)
         for attackElement in attackElements:
             attackElement.draw(surface)
+        myImage = pygame.transform.scale(stateVars.legendaryImage, (160, 40))
+        myImageRect = myImage.get_rect()
+        myImageRect = myImageRect.move(450-160, 0)
+        surface.blit(myImage, myImageRect)
     return Reward(collect, draw)
 
-def genCurrencyReward(currency, name, icon, amount, player):
+def genCurrencyReward(currency, name, icon, amount, player, badge):
     def collect():
         player.__setattr__(currency, amount+player.__getattribute__(currency))
     def draw(surface):
@@ -113,6 +117,11 @@ def genCurrencyReward(currency, name, icon, amount, player):
         iconImg.x = bigTextRect.x+60
         iconImg.y = bigTextRect.y
         iconImg.draw(surface)
+
+        myImage = pygame.transform.scale(badge, (160, 40))
+        myImageRect = myImage.get_rect()
+        myImageRect = myImageRect.move(450-160, 0)
+        surface.blit(myImage, myImageRect)
 
     iconImg = createIcon(ViewScreen.Test, icon, 0, 0, Font.large)
     visualComponents.remove(iconImg)

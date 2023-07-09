@@ -42,6 +42,11 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
+    stateVars.commonImage = pygame.image.load("assets\\Common.png")
+    stateVars.uncommonImage = pygame.image.load("assets\\Uncommon.png")
+    stateVars.rareImage = pygame.image.load("assets\\Rare.png")
+    stateVars.legendaryImage = pygame.image.load("assets\\Legendary.png")
+
     playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
     fireBallImage = Image(ViewScreen.Battle, 5000, 350, 250, 250, "assets\\fireball.png")
