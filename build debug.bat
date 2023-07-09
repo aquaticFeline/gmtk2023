@@ -1,1 +1,1 @@
-pyinstaller gmtk2023.py --name FurryQuest --add-data ".\assets;."
+pyinstaller gmtk2023.py --name FurryQuest --add-data ".\assets;.\assets"
