@@ -86,8 +86,6 @@ def initIcons():
         Icon.ManaPotion : "assets\\manapotion.png", 
         Icon.Coin : "assets\\coin.png", 
     }
-    for icon in stateVars.iconImageFiles:
-        stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon])
 
 def convertMousePos(mousePos):
     floatMousePos = (mousePos[0]/stateVars.screen.get_size()[0], mousePos[1]/stateVars.screen.get_size()[1])

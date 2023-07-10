@@ -49,7 +49,7 @@ class Button(VisualComponent):
     def __post_init__(self):
         super().__post_init__()
         buttons.append(self)
-        self.stars = [pygame.image.load("assets\\activeStar.png"), pygame.image.load("assets\\hoverStar.png")]
+        self.stars = [stateVars.activeStar, stateVars.hoverStar]
         self.stars = [pygame.transform.scale(star, (15, 15)) for star in self.stars]
 
     def drawConfig(self):
@@ -105,8 +105,8 @@ class DisableButton(Button):
 
     def __post_init__(self):
         super().__post_init__()
-        self.stars.append(pygame.image.load("assets\\disableStar.png"))
-        self.stars = [pygame.transform.scale(star, (15, 15)) for star in self.stars]
+        self.stars.append(stateVars.disableStar)
+        self.stars[2] = pygame.transform.scale(self.stars[2], (15, 15))
 
     def drawConfig(self):
         if self.isDisabled():
@@ -219,7 +219,7 @@ class BattleBkgrdImage(VisualComponent):
         super().__post_init__()
         self.images = {}
         for ele in levelImageFiles:
-            self.images[ele] = pygame.image.load(levelImageFiles[ele])
+            self.images[ele] = stateVars.levelImages[ele]
             self.images[ele] = pygame.transform.scale(self.images[ele], (self.width, self.height))
 
     def draw(self, surface):
