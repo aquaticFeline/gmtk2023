@@ -325,12 +325,11 @@ def main():
 
     charcterCustomImage = pygame.image.load("assets\\bnuuy.png")
 
-    regenPlayerText()
     #oponent.genText((400, 0))
 
     genGacha(player)
 
-    viewSurfaces = {veiwScreen : pygame.Surface(default_screen_size) for veiwScreen in ViewScreen}
+    #viewSurfaces = {veiwScreen : pygame.Surface(default_screen_size) for veiwScreen in ViewScreen}
     default_screen = pygame.Surface(default_screen_size)
 
     stateVars.default_screen_size = default_screen_size
@@ -354,21 +353,22 @@ def main():
                 #print(f"Load Time: {int((time.time()-initTime)*1000)}ms")
             #print(f"Load Time For Frame: {int((time.time()-lastTime)*1000)}ms")
 
-        for surface in viewSurfaces.values():
-            surface.fill(Color.black)
+        #for surface in viewSurfaces.values():
+            #surface.fill(Color.black)
 
-        viewSurfaces[ViewScreen.GachaScreen].fill((173, 117, 66))
+        if stateVars.viewScreen == ViewScreen.GachaScreen:
+            default_screen.fill((173, 117, 66))
 
         checkEvents(playerWorldMap)
 
         for visualComponent in visualComponents:
             if visualComponent.viewScreen == stateVars.viewScreen:
-                visualComponent.draw(viewSurfaces[visualComponent.viewScreen])
+                visualComponent.draw(default_screen)
 
         for animation in animations:
             animation.update()
 
-        default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
+        #default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
 
         if stateVars.viewScreen == ViewScreen.CharacterCustomization:
             charcterCustomImageTemp = pygame.transform.scale(charcterCustomImage, (BossStats.width, BossStats.height))

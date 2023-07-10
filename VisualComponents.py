@@ -189,8 +189,8 @@ class HollowRect(VisualComponent):
 class Image(VisualComponent):
     x: float
     y: float
-    width:float
-    height: float
+    _width:float
+    _height: float
     imageFile: str
 
     def __post_init__(self):
@@ -199,9 +199,27 @@ class Image(VisualComponent):
 
     def reloadImage(self):
         self.image = pygame.image.load(self.imageFile)
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
+    @property
+    def width(self):
+        return self._width
+
+    @property
+    def height(self):
+        return self._height
+
+    @width.setter
+    def width(self, val):
+        self._width = val
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+    
+    @height.setter
+    def height(self, val):
+        self._height = val
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     def draw(self, surface):
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         imageRect = self.image.get_rect()
         imageRect = imageRect.move(self.x, self.y)
         surface.blit(self.image, imageRect)
@@ -223,11 +241,11 @@ class BattleBkgrdImage(VisualComponent):
             self.images[ele] = pygame.transform.scale(self.images[ele], (self.width, self.height))
 
     def draw(self, surface):
-        self.image = self.images[stateVars.selectLevel]
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        imageRect = self.image.get_rect()
-        imageRect = imageRect.move(self.x, self.y)
-        surface.blit(self.image, imageRect)
+        #self.image = self.images[stateVars.selectLevel]
+        #self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        #imageRect = self.image.get_rect()
+        #imageRect = imageRect.move(self.x, self.y)
+        surface.blit(self.images[stateVars.selectLevel], self.images[stateVars.selectLevel].get_rect())
 
 def createIcon(viewScreen, icon, x, y, font):
     return Image(viewScreen, x, y, font.get_linesize(), font.get_linesize(), stateVars.iconImageFiles[icon])
