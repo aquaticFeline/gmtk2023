@@ -89,3 +89,7 @@ def initIcons():
     for icon in stateVars.iconImageFiles:
         stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon])
 
+def convertMousePos(mousePos):
+    floatMousePos = (mousePos[0]/stateVars.screen.get_size()[0], mousePos[1]/stateVars.screen.get_size()[1])
+    return (floatMousePos[0]*stateVars.default_screen_size[0], floatMousePos[1]*stateVars.default_screen_size[1])
+    

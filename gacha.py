@@ -232,7 +232,7 @@ class GoToGachaButton(VisualComponent):
         self.animating = False
 
     def draw(self, surface):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
             if not self.animating and self.completion <= 0:
                 self.triggerAnimation()
@@ -257,7 +257,7 @@ class GoToGachaButton(VisualComponent):
 
 
     def checkAction(self):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
             self.action()
             return True

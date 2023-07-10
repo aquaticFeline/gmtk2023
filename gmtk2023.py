@@ -34,9 +34,9 @@ def main():
     stateVars.selectLevel = Levels.Cemetery
     pygame.display.set_caption("Furry Quest")
 
-    screen_size = screen_width, screen_height = (1600, 900)
-    screen = pygame.display.set_mode(screen_size)
-    screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
+    default_screen_size = screen_width, screen_height = (1600, 900)
+    screen = pygame.display.set_mode(default_screen_size, pygame.RESIZABLE)
+    default_screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
 
     Image(ViewScreen.WorldMap, 0, 0, screen_width, screen_height, "assets\\worldmap.png")
     BattleBkgrdImage(ViewScreen.Battle, 0, 0, screen_width, screen_height)
@@ -274,10 +274,14 @@ def main():
 
     genGacha(player)
 
-    viewSurfaces = {veiwScreen : pygame.Surface(screen_size) for veiwScreen in ViewScreen}
+    viewSurfaces = {veiwScreen : pygame.Surface(default_screen_size) for veiwScreen in ViewScreen}
+    default_screen = pygame.Surface(default_screen_size)
+
+    stateVars.default_screen_size = default_screen_size
+    stateVars.screen = screen
 
     while True:
-        screen.fill(Color.black)
+        default_screen.fill(Color.black)
         for surface in viewSurfaces.values():
             surface.fill(Color.black)
 
@@ -291,13 +295,16 @@ def main():
         for animation in animations:
             animation.update()
 
-        screen.blit(viewSurfaces[stateVars.viewScreen], screen_rect)
+        default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
 
         if stateVars.viewScreen == ViewScreen.CharacterCustomization:
             charcterCustomImageTemp = pygame.transform.scale(charcterCustomImage, (BossStats.width, BossStats.height))
             charcterCustomImageRect = charcterCustomImageTemp.get_rect()
             charcterCustomImageRect = charcterCustomImageRect.move(500, 400)
-            screen.blit(charcterCustomImageTemp, charcterCustomImageRect)
+            default_screen.blit(charcterCustomImageTemp, charcterCustomImageRect)
+        
+        draw_screen = pygame.transform.scale(default_screen, screen.get_size())
+        screen.blit(draw_screen, draw_screen.get_rect())
 
         pygame.display.flip()
 

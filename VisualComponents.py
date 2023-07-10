@@ -53,7 +53,7 @@ class Button(VisualComponent):
         self.stars = [pygame.transform.scale(star, (15, 15)) for star in self.stars]
 
     def drawConfig(self):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         backColor = (100, 200, 150) if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else (255, 255, 200)
         textColor = Color.black
         star = self.stars[0] if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height else self.stars[1]
@@ -91,7 +91,7 @@ class Button(VisualComponent):
         surface.blit(star, starRect4)
 
     def checkAction(self):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         if self.x < mouse[0] < self.x+self.width and self.y < mouse[1] < self.y+self.height:
             self.action()
             return True
@@ -131,14 +131,14 @@ class LevelButton(VisualComponent):
         self.radius = 30
 
     def draw(self, surface):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius and stateVars.playerProgression >= self.level.value:
             pygame.draw.circle(surface, Color.white if stateVars.playerProgression >= self.level.value else Color.gray, (self.x, self.y), self.radius+5)
             pygame.draw.circle(surface, Color.black, (self.x, self.y), self.radius+2.5)
         pygame.draw.circle(surface, Color.white if stateVars.playerProgression >= self.level.value else Color.gray, (self.x, self.y), self.radius)
 
     def checkAction(self, playerWorldMap):
-        mouse = pygame.mouse.get_pos()
+        mouse = convertMousePos(pygame.mouse.get_pos())
         if self.x-self.radius < mouse[0] < self.x+self.radius and self.y-self.radius < mouse[1] < self.y+self.radius and stateVars.playerProgression >= self.level.value:
             playerWorldMap.x = self.x - 75*0.5
             playerWorldMap.y = self.y - 150
