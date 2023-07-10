@@ -143,9 +143,9 @@ class GachaAnimation(VisualComponent):
     
     def __post_init__(self):
         super().__post_init__()
-        self.leftImage = pygame.image.load("assets/leftscroll.png")
+        self.leftImage = pygame.image.load("assets/leftscroll.png").convert_alpha()
         self.leftImage = pygame.transform.scale(self.leftImage, (75, 300))
-        self.rightImage = pygame.image.load("assets/rightscroll.png")
+        self.rightImage = pygame.image.load("assets/rightscroll.png").convert_alpha()
         self.rightImage = pygame.transform.scale(self.rightImage, (75, 300))
         self.center = 800
         self.top = 150
@@ -219,7 +219,7 @@ class GoToGachaButton(VisualComponent):
     def __post_init__(self):
         super().__post_init__()
         buttons.append(self)
-        self.image = pygame.image.load(self.imageFile)
+        self.image = pygame.image.load(self.imageFile).convert_alpha()
         self.animating = False
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.completion = 0

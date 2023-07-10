@@ -12,3 +12,4 @@ loading = True
 iconImages = {}
 iconImageFiles = {}
 levelImages = {}
+enemyImages = {}

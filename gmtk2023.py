@@ -7,6 +7,7 @@ from combat import *
 from Animations import *
 from standardClasses import *
 import stateVars
+import cProfile
 
 player= None
 playerWorldMap = None
@@ -26,9 +27,12 @@ def checkEvents(playerWorldMap):
                         break
 
 
+initTime, lastTime = 0, 0
+frameFunc = None
 
 def main():
     global player, oponent
+    global initTime, lastTime, frameFunc
     pygame.init()
     initFonts()
     initIcons()
@@ -65,13 +69,13 @@ def main():
         tutorialText11.color = (0,0,0)
 
     def loadCommonImage():
-        stateVars.commonImage = pygame.image.load("assets\\Common.png")
+        stateVars.commonImage = pygame.image.load("assets\\Common.png").convert_alpha()
     def loadUncommonImage():
-        stateVars.uncommonImage = pygame.image.load("assets\\Uncommon.png")
+        stateVars.uncommonImage = pygame.image.load("assets\\Uncommon.png").convert_alpha()
     def loadRareImage():
-        stateVars.rareImage = pygame.image.load("assets\\Rare.png")
+        stateVars.rareImage = pygame.image.load("assets\\Rare.png").convert_alpha()
     def loadLegendaryImage():
-        stateVars.legendaryImage = pygame.image.load("assets\\Legendary.png")
+        stateVars.legendaryImage = pygame.image.load("assets\\Legendary.png").convert_alpha()
 
     def loadPlayerImage():
         playerImage = Image(ViewScreen.Battle, 400, 275, 225, 450, "assets\\protag.png")
@@ -153,7 +157,7 @@ def main():
         addAnimationToAttack(punchAttack, punchAttackAnimation)
 
     def loadWinImage():
-        Image(ViewScreen.YouWin, 0, 0, screen_width, screen_height, "assets\\cutscene.png")
+        BackgroundImage(ViewScreen.YouWin, "assets\\cutscene.png")
 
     def loadWinText():
         Text(ViewScreen.YouWin, 650, 100, Font.large, None, "You Win")
@@ -193,15 +197,18 @@ def main():
         global playerWorldMap
         playerWorldMap = PlayerWorldMap(ViewScreen.WorldMap, 300-75*0.5, 300-150)
     def loadBattleBackgroundImage(level):
-        stateVars.levelImages[level] = pygame.image.load(levelImageFiles[level])
+        stateVars.levelImages[level] = pygame.image.load(levelImageFiles[level]).convert()
 
     def loadIcon(icon):
-        stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon])
+        stateVars.iconImages[icon] = pygame.image.load(stateVars.iconImageFiles[icon]).convert_alpha()
+
+    def loadEnemyImages(imageFile):
+        stateVars.enemyImages[imageFile] = pygame.image.load(imageFile).convert_alpha()
 
     
     loadTasks = [
-        lambda: Image(ViewScreen.Tutorial, 0, 0, screen_width, screen_height, "assets\\tutorialbg.png"), #
-        lambda: Image(ViewScreen.WorldMap, 0, 0, screen_width, screen_height, "assets\\worldmap.png"), #
+        lambda: BackgroundImage(ViewScreen.Tutorial, "assets\\tutorialbg.png"), #
+        lambda: BackgroundImage(ViewScreen.WorldMap, "assets\\worldmap.png"), #
         lambda: loadBattleBackgroundImage(Levels.Cemetery), lambda: loadBattleBackgroundImage(Levels.Woods), lambda: loadBattleBackgroundImage(Levels.Meadows), lambda: loadBattleBackgroundImage(Levels.Boss),  #
         loadWinImage, 
         lambda: loadIcon(Icon.Health), lambda: loadIcon(Icon.Mana), lambda: loadIcon(Icon.PhysicalStrength), lambda: loadIcon(Icon.MagicalStrength), lambda: loadIcon(Icon.ManaPotion), lambda: loadIcon(Icon.HealPotion), lambda: loadIcon(Icon.Coin), 
@@ -213,6 +220,7 @@ def main():
         lambda: DynamicText(ViewScreen.Battle, 1200, 775, Font.medium, lambda x: f"Enemies Defeated: {stateVars.enemiesDefeated[stateVars.selectLevel.value]}/3"), #
         lambda: GoToGachaButton(ViewScreen.WorldMap, 1400, 650, 200, 400, "assets\\dabloon.png", lambda: changeScreen(ViewScreen.GachaScreen)), #
         loadPlayerImage, 
+        lambda: loadEnemyImages("assets\\ranibowsprimkle.png"), lambda: loadEnemyImages("assets\\pumpkin.png"), lambda: loadEnemyImages("assets\\mysteryshroom.png"),
         loadCommonImage, loadUncommonImage, loadRareImage, loadLegendaryImage, 
         loadfireBallImage, loadwaterBoltImage, loadenlightenmentImage, loadplantShroudImage, loadfrostImage, loadshadowfallImage, #loadPlayeerImage
         loadAttack, loadWinText, loadWorldMap, loadPlayerWorldMap, #loadWinImage
@@ -223,9 +231,9 @@ def main():
     
     randomNumber = random.randint(0, 10)
 
-    stateVars.disableStar = pygame.image.load("assets\\disableStar.png")
-    stateVars.activeStar = pygame.image.load("assets\\activeStar.png")
-    stateVars.hoverStar = pygame.image.load("assets\\hoverStar.png")
+    stateVars.disableStar = pygame.image.load("assets\\disableStar.png").convert_alpha()
+    stateVars.activeStar = pygame.image.load("assets\\activeStar.png").convert_alpha()
+    stateVars.hoverStar = pygame.image.load("assets\\hoverStar.png").convert_alpha()
 
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
     stateVars.enemyImage = enemyImage
@@ -235,7 +243,7 @@ def main():
 
     player = Player(10, 10, 100, 100, money = 10, _mana = 0)
     stateVars.player = player
-    spawnEnemy()
+    #spawnEnemy()
 
     #quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
 
@@ -256,7 +264,8 @@ def main():
 
     def beginBattle():
         player.mana = 0
-        stateVars.oponent.delete()
+        if stateVars.oponent is not None:
+            stateVars.oponent.delete()
         spawnEnemy()
         changeScreen(ViewScreen.Battle)
 
@@ -280,7 +289,7 @@ def main():
     Text(ViewScreen.DiedScreen, 650, 200, Font.large, None, "You Died")
     Text(ViewScreen.BattleClear, 650, 200, Font.large, None, "Battle Cleared")
 
-    Image(ViewScreen.CharacterCustomization, 0, 0, screen_width, screen_height, "assets\\cutscene.png") 
+    BackgroundImage(ViewScreen.CharacterCustomization, "assets\\cutscene.png") 
 
     Text(ViewScreen.CharacterCustomization, 425, 25, pygame.font.Font(size=80), None, "Customize Your Character")
 
@@ -323,25 +332,34 @@ def main():
 
     DisableButton(ViewScreen.CharacterCustomization, 700, 350, 175, 40, "Begin Game", Font.medium, lambda: changeScreen(ViewScreen.Tutorial), lambda: BossStats.upgradePoints > 0 or stateVars.loading)
 
-    charcterCustomImage = pygame.image.load("assets\\bnuuy.png")
+    charcterCustomImage = pygame.image.load("assets\\bnuuy.png").convert_alpha()
 
     #oponent.genText((400, 0))
 
     genGacha(player)
 
     #viewSurfaces = {veiwScreen : pygame.Surface(default_screen_size) for veiwScreen in ViewScreen}
-    default_screen = pygame.Surface(default_screen_size)
+    stateVars.default_screen = pygame.Surface(default_screen_size)
 
     stateVars.default_screen_size = default_screen_size
     stateVars.screen = screen
 
     initTime = time.time()
     lastTime = time.time()
-    while True:
-        print(f"Frame Time: {int((time.time()-lastTime)*1000)}ms")
+    def mainFrame():
+        global initTime, lastTime
+        #print(f"Frame Time: {int((time.time()-lastTime)*1000)}ms")
         lastTime = time.time()
-        default_screen.fill(Color.black)
+        stateVars.default_screen.fill(Color.black)
 
+        checkEvents(playerWorldMap)
+        animateFrame()
+        drawFrame()
+        loadFrame()
+        renderFrame()
+
+    def loadFrame():
+        global initTime, lastTime
         if stateVars.loading:
             while len(loadTasks) != 0 and time.time()-lastTime < 0.015:
                 taskTime = time.time()
@@ -356,30 +374,59 @@ def main():
         #for surface in viewSurfaces.values():
             #surface.fill(Color.black)
 
-        if stateVars.viewScreen == ViewScreen.GachaScreen:
-            default_screen.fill((173, 117, 66))
 
-        checkEvents(playerWorldMap)
+
+    def drawFrame():
+        if stateVars.viewScreen == ViewScreen.GachaScreen:
+            stateVars.default_screen.fill((173, 117, 66))
 
         for visualComponent in visualComponents:
             if visualComponent.viewScreen == stateVars.viewScreen:
-                visualComponent.draw(default_screen)
-
-        for animation in animations:
-            animation.update()
-
-        #default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
+                visualComponent.draw(stateVars.default_screen)
 
         if stateVars.viewScreen == ViewScreen.CharacterCustomization:
             charcterCustomImageTemp = pygame.transform.scale(charcterCustomImage, (BossStats.width, BossStats.height))
             charcterCustomImageRect = charcterCustomImageTemp.get_rect()
             charcterCustomImageRect = charcterCustomImageRect.move(500, 400)
-            default_screen.blit(charcterCustomImageTemp, charcterCustomImageRect)
-        
-        draw_screen = pygame.transform.scale(default_screen, screen.get_size())
+            stateVars.default_screen.blit(charcterCustomImageTemp, charcterCustomImageRect)
+
+    def animateFrame():
+        for animation in animations:
+            animation.update()
+
+        #default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
+    
+    def renderFrame():
+        if screen.get_size() == default_screen_size:
+            screen.blit(stateVars.default_screen, default_screen_rect)
+            pygame.display.flip()
+            return
+        draw_screen = pygame.transform.scale(stateVars.default_screen, screen.get_size())
         screen.blit(draw_screen, draw_screen.get_rect())
+        #screen = stateVars.default_screen.copy()
+        #stateVars.default_screen = screen
+        pass
 
         pygame.display.flip()
+
+    frameFunc = mainFrame
+
+    delay = False
+    while True:
+        #cProfile.run("frameFunc()", "profileout")
+        #if (time.time()-lastTime)*1000 > 20 and not stateVars.loading:#ViewScreen.Battle == stateVars.viewScreen:
+        #    if delay:
+        #        import pstats
+        #        from pstats import SortKey
+#
+         #       p = pstats.Stats('profileout')
+         #       p.sort_stats(SortKey.CUMULATIVE).print_stats()
+         #       
+
+         #       myQuit()
+         #   delay = True
+
+        mainFrame()
 
 
 if __name__ == "__main__":

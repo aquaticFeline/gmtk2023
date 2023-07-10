@@ -25,7 +25,7 @@ class BossSpawner():
     def spawn(self):
         stateVars.oponent = Boss(BossStats.damage - 10, BossStats.damage - 10, BossStats.health, BossStats.health)
         stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
-        stateVars.enemyImage.image = pygame.image.load("assets\\bnuuy.png")
+        stateVars.enemyImage.image = pygame.image.load("assets\\bnuuy.png").convert_alpha()
         stateVars.enemyImage.width = BossStats.width
         stateVars.enemyImage.height = BossStats.height
 
@@ -44,9 +44,10 @@ class EnemyType():
     def spawn(self):
         stateVars.oponent = CombatActor(self.physicalStrength, self.magicalStrength, self.maxHealth, self.maxHealth, self.maxMana, self.maxMana)
         stateVars.oponent.genText((1250, 0), ViewScreen.Battle)
-        stateVars.enemyImage.image = pygame.image.load(self.imageFile)
         stateVars.enemyImage.width = 225
         stateVars.enemyImage.height = 450
+        stateVars.enemyImage.image = stateVars.enemyImages[self.imageFile].copy()
+        stateVars.enemyImage.width = 225
 
 levelEnemyTypes = {Levels.Cemetery : [EnemyType(5, 5, 50, 50, "Pumpkin", "assets\\pumpkin.png")], 
                     Levels.Woods : [EnemyType(10, 10, 75, 75, "Mushroom", "assets\\mysteryshroom.png")], 

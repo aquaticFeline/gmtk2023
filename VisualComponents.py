@@ -163,7 +163,7 @@ class PlayerWorldMap(VisualComponent):
 
     def __post_init__(self):
         super().__post_init__()
-        self.image = pygame.image.load("assets/protag.png")
+        self.image = pygame.image.load("assets/protag.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (75, 150))
 
     def draw(self, surface):
@@ -195,10 +195,12 @@ class Image(VisualComponent):
 
     def __post_init__(self):
         super().__post_init__()
+        self.defaultImage = pygame.image.load(self.imageFile).convert_alpha()
+        #self.defaultImage = self.image.copy()
         self.reloadImage()
 
     def reloadImage(self):
-        self.image = pygame.image.load(self.imageFile)
+        self.image = self.defaultImage.copy()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     @property
@@ -237,7 +239,7 @@ class BattleBkgrdImage(VisualComponent):
         super().__post_init__()
         self.images = {}
         for ele in levelImageFiles:
-            self.images[ele] = stateVars.levelImages[ele]
+            self.images[ele] = stateVars.levelImages[ele].convert()
             self.images[ele] = pygame.transform.scale(self.images[ele], (self.width, self.height))
 
     def draw(self, surface):
@@ -245,7 +247,25 @@ class BattleBkgrdImage(VisualComponent):
         #self.image = pygame.transform.scale(self.image, (self.width, self.height))
         #imageRect = self.image.get_rect()
         #imageRect = imageRect.move(self.x, self.y)
-        surface.blit(self.images[stateVars.selectLevel], self.images[stateVars.selectLevel].get_rect())
+        #surface.blit(self.images[stateVars.selectLevel], self.images[stateVars.selectLevel].get_rect())
+        stateVars.default_screen = self.images[stateVars.selectLevel].copy()
+        pass
 
 def createIcon(viewScreen, icon, x, y, font):
     return Image(viewScreen, x, y, font.get_linesize(), font.get_linesize(), stateVars.iconImageFiles[icon])
+
+@dataclass
+class BackgroundImage(VisualComponent):
+    imageFile: str
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.reloadImage()
+
+    def reloadImage(self):
+        self.image = pygame.image.load(self.imageFile).convert()
+        self.image = pygame.transform.scale(self.image, (1600, 900))
+        
+    def draw(self, surface):
+        stateVars.default_screen = self.image.copy()
+
