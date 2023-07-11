@@ -61,7 +61,7 @@ def main():
         tutorialText7.color = (0,0,0)
         tutorialText8 = Text(ViewScreen.Tutorial, 300, 345, Font.medium, None, "your travels!  You may also want to practice honing your skills in earlier levels. Be careful ")
         tutorialText8.color = (0,0,0)
-        tutorialText9 = Text(ViewScreen.Tutorial, 300, 380, Font.medium, None, "not to die! You will lose half your dabloons (money) if you do!!! You can spend the your dabloons ")
+        tutorialText9 = Text(ViewScreen.Tutorial, 300, 380, Font.medium, None, "not to die! You will lose half your dabloons (money) if you do!!! You can spend your dabloons ")
         tutorialText9.color = (0,0,0)
         tutorialText10 = Text(ViewScreen.Tutorial, 300, 415, Font.medium, None, "at a certain cat on the world map... ")
         tutorialText10.color = (0,0,0)
