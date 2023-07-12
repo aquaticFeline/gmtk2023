@@ -8,7 +8,7 @@ import random, math
 
 oponent = None
 inAnimation = False
-delayNextTurn = False
+stateVars.delayNextTurn = False
 doEnemyAttack = True
 
 def initBattleButtons():
@@ -92,9 +92,9 @@ class CombatActor:
         return cost <= self.mana
 
     def die(self):
-        global visualComponents, delayNextTurn
+        global visualComponents
         #print(self, " died")
-        delayNextTurn = True
+        stateVars.delayNextTurn = True
         ShrinkAnimation(stateVars.enemyImage, 0.25, self.doDeath).start()
 
     def delete(self):
@@ -102,7 +102,7 @@ class CombatActor:
             visualComponents.remove(text)
 
     def doDeath(self):
-        global inAnimation, delayNextTurn, doEnemyAttack
+        global inAnimation, doEnemyAttack
         stateVars.enemyImage.reloadImage()
         self.delete()
         stateVars.player.mana += 10
@@ -126,7 +126,7 @@ class CombatActor:
         stateVars.moneyText.text =  "    +" + str(moneyMod) + " money"
         stateVars.moneyText.start()
         spawnEnemy()
-        delayNextTurn = False
+        stateVars.delayNextTurn = False
         doEnemyAttack = False
         nextTurn(stateVars.player)
         doEnemyAttack = True
@@ -151,8 +151,8 @@ class CombatActor:
 @dataclass
 class Boss(CombatActor):
     def die(self):
-        global visualComponents, delayNextTurn, inAnimation
-        delayNextTurn = True
+        global visualComponents, inAnimation
+        stateVars.delayNextTurn = True
         changeScreen(ViewScreen.YouWin)
         stateVars.enemyImage.reloadImage()
         self.delete()
@@ -206,7 +206,7 @@ class Attack:
 
 def nextTurn(player):
     global inAnimation
-    if not delayNextTurn:
+    if not stateVars.delayNextTurn:
         inAnimation = True
         if doEnemyAttack:
             stateVars.enemyAnimation.start()
@@ -307,8 +307,8 @@ class Player(CombatActor):
                     return not iself.attack.canAttack(self, oponent) or inAnimation
 
         for i, attack in enumerate(self.attacks):
-            useButton = attack.genText((position[0], position[1]+7*(Font.medium.get_linesize())+i*150), isUseButton, viewScreen, self.elements)
-            if isUseButton:
+            useButton = attack.genText((position[0], position[1]+7*(Font.medium.get_linesize())+i*150), isUseButton and attack.name != "None", viewScreen, self.elements)
+            if isUseButton and attack.name != "None":
                 self.elements.append(useButton)
                 self.buttons.append(useButton)
                 myAttack = AttackButtonContainer(attack)

@@ -168,7 +168,12 @@ def main():
 
         Button(ViewScreen.DiedScreen, 575, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
         Button(ViewScreen.BattleClear, 600, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
-        Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
+
+        def youWin():
+            stateVars.delayNextTurn = False
+            changeScreen(ViewScreen.WorldMap)
+
+        Button(ViewScreen.YouWin, 550, 400, 350, 50, "Continue to World Map", Font.medium, lambda: youWin())
     
     def loadCollectEffects():
         stateVars.manaText = FadingText(ViewScreen.Battle, 50, 150, "    + mana", Font.large, (100, 150, 255), Icon.Mana, 0.5)
