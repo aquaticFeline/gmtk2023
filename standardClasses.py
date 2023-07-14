@@ -23,7 +23,6 @@ def myQuit():
     sys.exit()
 
 def changeScreen(iViewScreen):
-    #global viewScreen
     stateVars.viewScreen = iViewScreen
 
 class Color:
@@ -76,7 +75,6 @@ def initFonts():
 
 
 def initIcons():
-    #global iconImages, iconImageFiles
     stateVars.iconImageFiles = {
         Icon.Health : "assets\\health.png", 
         Icon.Mana : "assets\\mana.png", 

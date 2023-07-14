@@ -46,7 +46,6 @@ def clearButtons():
 
 def _genSwapButton(player, attack, i):
     position = (0, 0)
-    #position[0]+235, position[1]+10, 65, 35, "Use", pygame.font.Font(size=48), 
     swapButons.append(Button(ViewScreen.GachaScreen, position[0]+210, position[1]+7*(Font.medium.get_linesize())+i*150+10, 95, 45, "Swap", pygame.font.Font(size=48), lambda: swap(player, attack, i)))
 
 def genSwapButtons(player, attack):
@@ -79,7 +78,6 @@ def genGacha(player):
         if rewardType == 15 or rewardType == 17:
             return genCurrencyReward("manaPotions", "Mana Potions", Icon.ManaPotion, random.randint(4, 8), player, stateVars.uncommonImage)
 
-        #return genAttackReward(random.choice([stateVars.plantShroudAttack]), player)
         return genAttackReward(random.choice([stateVars.punchAttack, stateVars.shredAttack, stateVars.bonkAttack, stateVars.waterBoltAttack, stateVars.plantShroudAttack, stateVars.enlightenmentAttack, stateVars.frostAttack, stateVars.shadowfallAttack, stateVars.fireBallAttack]), player)
 
     gachaAnimation = GachaAnimation(ViewScreen.GachaScreen, getReward, player)
@@ -198,7 +196,6 @@ class GachaAnimation(VisualComponent):
         surface.blit(self.rightImage, rightRect)
 
         centerRect = pygame.rect.Rect(self.center-self.animationScale*self.completion, self.top+12.5*1.5, 2*self.animationScale*self.completion+2, 262.5)
-        #pygame.draw.rect(surface, (193, 190, 169), centerRect)
 
         if self.reward is not None:
             rewardSurface = pygame.Surface(centerRect.size)
@@ -252,9 +249,6 @@ class GoToGachaButton(VisualComponent):
         imageRect = self.image.get_rect()
         imageRect = imageRect.move(self.x, self.y-self.completion*150)
         surface.blit(self.image, imageRect)
-
-
-
 
     def checkAction(self):
         mouse = convertMousePos(pygame.mouse.get_pos())

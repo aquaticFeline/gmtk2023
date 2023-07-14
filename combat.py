@@ -4,7 +4,6 @@ from VisualComponents import *
 from standardClasses import *
 from Animations import *
 import random, math
-#import VisualComponents
 
 oponent = None
 inAnimation = False
@@ -193,16 +192,13 @@ class Attack:
         multiText = genMultilineText(self.description, viewScreen, position[0]+3, position[1]+(2 if self.isMagic else 1)*Font.medium.get_linesize()+Font.large.get_linesize()+3, Font.small)
         for text in multiText:
             elements.append(text)
-
             
         elements.append(createIcon(viewScreen, Icon.MagicalStrength if self.isMagic else Icon.PhysicalStrength,  position[0]+3, position[1]+Font.large.get_linesize()+3, Font.medium))
         if self.isMagic:
             elements.append(createIcon(viewScreen, Icon.Mana, position[0]+3, position[1]+Font.medium.get_linesize()+Font.large.get_linesize()+3, Font.medium))
 
         if useButton:
-            #if self.isMagic:
             return DisableButton(viewScreen, position[0]+230, position[1]+10, 70, 40, "Use", pygame.font.Font(size=48), None, None)
-            #return Button(ViewScreen.Battle, position[0]+225, position[1], 75, 45, "Use", Font.large, None)
 
 def nextTurn(player):
     global inAnimation
@@ -247,7 +243,6 @@ class Player(CombatActor):
     manaPotions: int = 0
 
     def __post_init__(self):
-        #super().__post_init__()
         self.attacks.append(UsePotion(0.0, False, "Health Potion", "Grants 75 health", player=self))
         self.attacks.append(UsePotion(0.0, False, "Mana Potion", "Grants 25 mana", isMana=True, player=self))
         self.elements = []

@@ -6,6 +6,8 @@ Window Icon
 Player/Enemy/Boss Names
 Backgrounds for Death and Battle Clear Screens
 Code cleanup
- - Removing old/dead code
+ - Comment Code
+ - Change Some Code Stuff
+ - Move load code out of main? This might break thigs so i dont wanna do it
 Readme maybe?
 Loading lag reduction

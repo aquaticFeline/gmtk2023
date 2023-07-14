@@ -9,6 +9,8 @@ from standardClasses import *
 import stateVars
 import cProfile
 
+printProfiling = False
+
 player= None
 playerWorldMap = None
 
@@ -33,16 +35,6 @@ frameFunc = None
 def main():
     global player, oponent
     global initTime, lastTime, frameFunc
-    pygame.init()
-    initFonts()
-    initIcons()
-    stateVars.viewScreen = ViewScreen.CharacterCustomization
-    stateVars.selectLevel = Levels.Cemetery
-    pygame.display.set_caption("Furry Quest")
-
-    default_screen_size = screen_width, screen_height = (1600, 900)
-    screen = pygame.display.set_mode(default_screen_size, pygame.RESIZABLE)
-    default_screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
 
     def genTutorialText():
         tutorialText1 = Text(ViewScreen.Tutorial, 300, 100, Font.medium, None, "Uh oh! Your beloved bunny breached dimensions, and was sent to this world! Since this ")
@@ -168,6 +160,8 @@ def main():
 
         Button(ViewScreen.DiedScreen, 575, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
         Button(ViewScreen.BattleClear, 600, 400, 350, 50, "Continue to World Map", Font.medium, lambda: changeScreen(ViewScreen.WorldMap))
+        Text(ViewScreen.DiedScreen, 650, 200, Font.large, None, "You Died")
+        Text(ViewScreen.BattleClear, 650, 200, Font.large, None, "Battle Cleared")
 
         def youWin():
             stateVars.delayNextTurn = False
@@ -188,6 +182,15 @@ def main():
         visualComponents.append(stateVars.enemyImage)
 
     def loadWorldMap():
+        def beginBattle():
+            player.mana = 0
+            if stateVars.oponent is not None:
+                stateVars.oponent.delete()
+            spawnEnemy()
+            changeScreen(ViewScreen.Battle)
+
+        levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows", Levels.Boss: "Bunny's Lair"}
+
         worldMapButton = Button(ViewScreen.WorldMap, 15, 15, 250, 50, "<-- Back to tutorial", Font.medium, lambda: changeScreen(ViewScreen.Tutorial))
         worldMapButton = Button(ViewScreen.WorldMap, 1425, 65, 150, 50, "To Battle", pygame.font.Font(size=32), beginBattle)
         level0 = LevelButton(ViewScreen.WorldMap, 300, 300, Levels.Cemetery)
@@ -232,70 +235,31 @@ def main():
         regenPlayerText
         
     ]
-
     
-    randomNumber = random.randint(0, 10)
+    pygame.init()
+    initFonts()
+    initIcons()
+    stateVars.viewScreen = ViewScreen.CharacterCustomization
+    stateVars.selectLevel = Levels.Cemetery
+    pygame.display.set_caption("Furry Quest")
+
+    default_screen_size = screen_width, screen_height = (1600, 900)
+    screen = pygame.display.set_mode(default_screen_size, pygame.RESIZABLE)
+    default_screen_rect = pygame.rect.Rect(0, 0, screen_width, screen_height)
 
     stateVars.disableStar = pygame.image.load("assets\\disableStar.png").convert_alpha()
     stateVars.activeStar = pygame.image.load("assets\\activeStar.png").convert_alpha()
     stateVars.hoverStar = pygame.image.load("assets\\hoverStar.png").convert_alpha()
 
+    #This code should be moved to a load task but that breaks things
     enemyImage = Image(ViewScreen.Battle, 1025, 275, 225, 450, "assets\\ranibowsprimkle.png")
+    player = Player(10, 10, 100, 100, money = 10, _mana = 0)
     stateVars.enemyImage = enemyImage
-    
+    stateVars.player = player
 
     stateVars.enemyAnimation = MoveAnimation(enemyImage, 400, 275, 0.6, 1025, 275, 1.2, finishEnemyAnimate)
 
-    player = Player(10, 10, 100, 100, money = 10, _mana = 0)
-    stateVars.player = player
-    #spawnEnemy()
-
-    #quitButton = Button(ViewScreen.Test, 100, 0, 100, 40, "Quit", Font.large, myQuit)
-
-    #randomNumberText = Text(ViewScreen.Test, 0, 0, Font.large, None, f"{randomNumber}")
-    #playerHealthText = DynamicText(ViewScreen.Test, 0, 50, Font.large, lambda self: f"{player.health}")
-    #oponentHealthText = DynamicText(ViewScreen.Test, 0, 100, Font.large, lambda self: f"{stateVars.oponent.health}")
-    
-    #playerAttackButton = Button(ViewScreen.Test, 100, 50, 150, 40, "Player Attack", pygame.font.Font(size=30), lambda: player.physicalAttack(oponent))
-    #opponentAttackButton = Button(ViewScreen.Test, 100, 100, 150, 40, "Opponent Attack", pygame.font.Font(size=30), lambda: oponent.physicalAttack(player))
-
-    #worldMapButton = Button(ViewScreen.Test, 500, 0, 100, 50, "To World Map", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.WorldMap))
-
-    #returnTestButton = Button(ViewScreen.WorldMap, 500, 0, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
-
-    #Tutorial screen stuff
-    #returnTutorialButton = Button(ViewScreen.WorldMap, 0, 400, 100, 50, "Go to Tutorial", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Tutorial))
-    
-
-    def beginBattle():
-        player.mana = 0
-        if stateVars.oponent is not None:
-            stateVars.oponent.delete()
-        spawnEnemy()
-        changeScreen(ViewScreen.Battle)
-
-
-    #worldMapButton = Button(ViewScreen.Test, 500, 100, 100, 50, "To Battle", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Battle))
-    #returnTestButton = Button(ViewScreen.Battle, 500, 100, 100, 50, "Return To Screen", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.Test))
-
-
-    #worldMapButton = Button(ViewScreen.Test, 0, 300, 100, 50, "Play Gacha", pygame.font.Font(size=20), lambda: changeScreen(ViewScreen.GachaScreen))
-
-
-    levelNames = {Levels.Cemetery : "Cemetery", Levels.Woods : "Woods", Levels.Meadows : "Meadows", Levels.Boss: "Bunny's Lair"}
-
-
-    #Button(ViewScreen.WorldMap, 0, 0, 250, 50, "Test", pygame.font.Font(size=32), lambda: testText.start())
-
-    # Button(ViewScreen.WorldMap, 0, 0, 150, 50, "Test Die", Font.medium, lambda: changeScreen(ViewScreen.DiedScreen))
-    # Button(ViewScreen.WorldMap, 0, 50, 150, 50, "Test Clear", Font.medium, lambda: changeScreen(ViewScreen.BattleClear))
-    # Button(ViewScreen.WorldMap, 0, 100, 150, 50, "Test Win", Font.medium, lambda: changeScreen(ViewScreen.YouWin))
-
-    Text(ViewScreen.DiedScreen, 650, 200, Font.large, None, "You Died")
-    Text(ViewScreen.BattleClear, 650, 200, Font.large, None, "Battle Cleared")
-
     BackgroundImage(ViewScreen.CharacterCustomization, "assets\\cutscene.png") 
-
     Text(ViewScreen.CharacterCustomization, 425, 25, pygame.font.Font(size=80), None, "Customize Your Character")
 
     DynamicText(ViewScreen.CharacterCustomization, 600, 100, Font.large, lambda x: f"Health: {BossStats.health}")
@@ -339,13 +303,10 @@ def main():
 
     charcterCustomImage = pygame.image.load("assets\\bnuuy.png").convert_alpha()
 
-    #oponent.genText((400, 0))
-
+    #This should be a load task, IDK why it isn't
     genGacha(player)
 
-    #viewSurfaces = {veiwScreen : pygame.Surface(default_screen_size) for veiwScreen in ViewScreen}
     stateVars.default_screen = pygame.Surface(default_screen_size)
-
     stateVars.default_screen_size = default_screen_size
     stateVars.screen = screen
 
@@ -353,7 +314,8 @@ def main():
     lastTime = time.time()
     def mainFrame():
         global initTime, lastTime
-        #print(f"Frame Time: {int((time.time()-lastTime)*1000)}ms")
+        if printProfiling:
+            print(f"Frame Time: {int((time.time()-lastTime)*1000)}ms")
         lastTime = time.time()
         stateVars.default_screen.fill(Color.black)
 
@@ -370,14 +332,14 @@ def main():
                 taskTime = time.time()
                 loadTasks[0]()
                 loadTasks.remove(loadTasks[0])
-                #print(f"Task Time: {int((time.time()-taskTime)*1000)}ms Task: {len(loadTasks)}")
+                if printProfiling:
+                    print(f"Task Time: {int((time.time()-taskTime)*1000)}ms Task: {len(loadTasks)}")
             if len(loadTasks) == 0:
                 stateVars.loading = False
-                #print(f"Load Time: {int((time.time()-initTime)*1000)}ms")
-            #print(f"Load Time For Frame: {int((time.time()-lastTime)*1000)}ms")
-
-        #for surface in viewSurfaces.values():
-            #surface.fill(Color.black)
+                if printProfiling:
+                    print(f"Load Time: {int((time.time()-initTime)*1000)}ms")
+            if printProfiling:
+                print(f"Load Time For Frame: {int((time.time()-lastTime)*1000)}ms")
 
 
 
@@ -398,8 +360,6 @@ def main():
     def animateFrame():
         for animation in animations:
             animation.update()
-
-        #default_screen.blit(viewSurfaces[stateVars.viewScreen], default_screen_rect)
     
     def renderFrame():
         if screen.get_size() == default_screen_size:
@@ -408,10 +368,6 @@ def main():
             return
         draw_screen = pygame.transform.scale(stateVars.default_screen, screen.get_size())
         screen.blit(draw_screen, draw_screen.get_rect())
-        #screen = stateVars.default_screen.copy()
-        #stateVars.default_screen = screen
-        pass
-
         pygame.display.flip()
 
     frameFunc = mainFrame
@@ -430,7 +386,6 @@ def main():
 
          #       myQuit()
          #   delay = True
-
         mainFrame()
 
 

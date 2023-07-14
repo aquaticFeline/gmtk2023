@@ -3,7 +3,6 @@ from standardClasses import *
 from combat import *
 import time
 
-
 animations = []
 
 class Animation:
@@ -105,7 +104,6 @@ class FireAnimation(Animation):
                 self.actor.x = self.toX2*completion + self.toX*(1-completion)
                 self.actor.y = self.toY2*completion + self.toY*(1-completion)
 
-#todo because this does not make images appear nor disappear 
 @dataclass
 class AppearAnimation(Animation):
     actor: Image
@@ -126,7 +124,6 @@ class AppearAnimation(Animation):
         self.isAnimating = True
         self.startX = self.actor.width
         self.startY = self.actor.height
-        #self.image = Image(self.viewScreen, self.xcoord, self.ycoord, self.width, self.height, self.imageFile)
         self.actor.viewScreen = self.viewScreen
     
     def update(self):
